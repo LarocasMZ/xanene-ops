@@ -934,15 +934,23 @@ class XaneneOps {
         document.getElementById('task-form')?.addEventListener('submit', async (e) => {
             e.preventDefault();
             const formData = new FormData(e.target);
+            const category = formData.get('category');
+            
+            // Validate category
+            if (!category) {
+                alert('Por favor, selecione uma categoria');
+                return;
+            }
+            
             const dueDateValue = formData.get('due_date');
             const data = {
                 title: formData.get('title'),
                 description: formData.get('description'),
                 priority: formData.get('priority'),
-                category: formData.get('category'),
+                category: category,
                 assigned_to_id: formData.get('assigned_to_id') ? parseInt(formData.get('assigned_to_id')) : null,
             };
-            
+
             // Only add due_date if it has a value
             if (dueDateValue) {
                 data.due_date = dueDateValue;
