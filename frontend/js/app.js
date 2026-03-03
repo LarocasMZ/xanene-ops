@@ -228,7 +228,7 @@ class XaneneOps {
             if (data.today_tasks.length > 0) {
                 tasksList.innerHTML = data.today_tasks.map(task => this.renderTaskItem(task)).join('');
             } else {
-                tasksList.innerHTML = '<div class="text-center text-dark-400 py-4">No tasks for today</div>';
+                tasksList.innerHTML = '<div class="text-center text-gray-400 py-4">No tasks for today</div>';
             }
             
             // Upcoming events
@@ -236,7 +236,7 @@ class XaneneOps {
             if (data.upcoming_events.length > 0) {
                 eventsList.innerHTML = data.upcoming_events.map(event => this.renderEventItem(event)).join('');
             } else {
-                eventsList.innerHTML = '<div class="text-center text-dark-400 py-4">No upcoming events</div>';
+                eventsList.innerHTML = '<div class="text-center text-gray-400 py-4">No upcoming events</div>';
             }
             
             // Overdue tasks
@@ -244,7 +244,7 @@ class XaneneOps {
             if (data.overdue_tasks.length > 0) {
                 overdueList.innerHTML = data.overdue_tasks.map(task => this.renderTaskItem(task, true)).join('');
             } else {
-                overdueList.innerHTML = '<div class="text-center text-dark-400 py-4">No overdue tasks</div>';
+                overdueList.innerHTML = '<div class="text-center text-gray-400 py-4">No overdue tasks</div>';
             }
         } catch (error) {
             console.error('Error loading dashboard:', error);
@@ -263,15 +263,15 @@ class XaneneOps {
         const overdueClass = isOverdue ? 'border-l-4 border-l-red-500' : '';
         
         return `
-            <div class="flex items-center justify-between p-3 bg-dark-900 rounded-lg ${overdueClass}">
+            <div class="flex items-center justify-between p-3 bg-gray-900 rounded-lg ${overdueClass}">
                 <div class="flex-1">
                     <p class="text-white font-medium">${task.title}</p>
                     <div class="flex items-center space-x-2 mt-1">
                         <span class="text-xs px-2 py-0.5 rounded ${priorityColors[task.priority]} capitalize">${task.priority}</span>
-                        <span class="text-dark-500 text-xs">${dueDate}</span>
+                        <span class="text-gray-500 text-xs">${dueDate}</span>
                     </div>
                 </div>
-                ${task.assignee_name ? `<span class="text-dark-400 text-sm">${task.assignee_name}</span>` : ''}
+                ${task.assignee_name ? `<span class="text-gray-400 text-sm">${task.assignee_name}</span>` : ''}
             </div>
         `;
     }
@@ -290,14 +290,14 @@ class XaneneOps {
         const timeStr = `${startDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} - ${endDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
         
         return `
-            <div class="flex items-center justify-between p-3 bg-dark-900 rounded-lg">
+            <div class="flex items-center justify-between p-3 bg-gray-900 rounded-lg">
                 <div class="flex-1">
                     <p class="text-white font-medium">${event.title}</p>
                     <div class="flex items-center space-x-2 mt-1">
                         <span class="text-xs px-2 py-0.5 rounded ${categoryColors[event.category]} capitalize">${event.category}</span>
-                        <span class="text-dark-500 text-xs">${timeStr}</span>
+                        <span class="text-gray-500 text-xs">${timeStr}</span>
                     </div>
-                    ${event.location ? `<p class="text-dark-500 text-xs mt-1"><i class="fas fa-map-marker-alt mr-1"></i>${event.location}</p>` : ''}
+                    ${event.location ? `<p class="text-gray-500 text-xs mt-1"><i class="fas fa-map-marker-alt mr-1"></i>${event.location}</p>` : ''}
                 </div>
             </div>
         `;
@@ -336,8 +336,8 @@ class XaneneOps {
         for (let i = startingDay - 1; i >= 0; i--) {
             const day = prevMonthLastDay - i;
             grid.innerHTML += `
-                <div class="min-h-[100px] p-2 border-r border-b border-dark-700 bg-dark-900/50">
-                    <span class="text-dark-500 text-sm">${day}</span>
+                <div class="min-h-[100px] p-2 border-r border-b border-dark-700 bg-gray-900/50">
+                    <span class="text-gray-500 text-sm">${day}</span>
                 </div>
             `;
         }
@@ -351,7 +351,7 @@ class XaneneOps {
             
             grid.innerHTML += `
                 <div class="min-h-[100px] p-2 border-r border-b border-dark-700 ${isToday ? 'bg-primary-900/20' : ''}" data-date="${dateStr}">
-                    <span class="${isToday ? 'text-primary-400 font-bold' : 'text-dark-300'} text-sm">${day}</span>
+                    <span class="${isToday ? 'text-primary-400 font-bold' : 'text-gray-300'} text-sm">${day}</span>
                     <div class="mt-1 space-y-1 calendar-events" data-date="${dateStr}"></div>
                 </div>
             `;
@@ -361,8 +361,8 @@ class XaneneOps {
         const remainingCells = 42 - (startingDay + totalDays);
         for (let day = 1; day <= remainingCells; day++) {
             grid.innerHTML += `
-                <div class="min-h-[100px] p-2 border-r border-b border-dark-700 bg-dark-900/50">
-                    <span class="text-dark-500 text-sm">${day}</span>
+                <div class="min-h-[100px] p-2 border-r border-b border-dark-700 bg-gray-900/50">
+                    <span class="text-gray-500 text-sm">${day}</span>
                 </div>
             `;
         }
@@ -414,7 +414,7 @@ class XaneneOps {
                     
                     if (dateEvents.length > 3) {
                         container.innerHTML += `
-                            <div class="text-xs text-dark-400 px-1">+${dateEvents.length - 3} more</div>
+                            <div class="text-xs text-gray-400 px-1">+${dateEvents.length - 3} more</div>
                         `;
                     }
                 }
@@ -432,7 +432,7 @@ class XaneneOps {
             if (events.length > 0) {
                 container.innerHTML = events.map(event => this.renderEventItem(event)).join('');
             } else {
-                container.innerHTML = '<div class="text-center text-dark-400 py-8">No upcoming events</div>';
+                container.innerHTML = '<div class="text-center text-gray-400 py-8">No upcoming events</div>';
             }
         } catch (error) {
             console.error('Error loading upcoming events:', error);
@@ -447,16 +447,16 @@ class XaneneOps {
             document.getElementById('kanban-view').classList.remove('hidden');
             document.getElementById('list-view').classList.add('hidden');
             document.getElementById('view-kanban').classList.add('bg-primary-600', 'text-white');
-            document.getElementById('view-kanban').classList.remove('bg-dark-800', 'text-dark-300');
+            document.getElementById('view-kanban').classList.remove('bg-gray-800', 'text-gray-300');
             document.getElementById('view-list').classList.remove('bg-primary-600', 'text-white');
-            document.getElementById('view-list').classList.add('bg-dark-800', 'text-dark-300');
+            document.getElementById('view-list').classList.add('bg-gray-800', 'text-gray-300');
         } else {
             document.getElementById('kanban-view').classList.add('hidden');
             document.getElementById('list-view').classList.remove('hidden');
             document.getElementById('view-list').classList.add('bg-primary-600', 'text-white');
-            document.getElementById('view-list').classList.remove('bg-dark-800', 'text-dark-300');
+            document.getElementById('view-list').classList.remove('bg-gray-800', 'text-gray-300');
             document.getElementById('view-kanban').classList.remove('bg-primary-600', 'text-white');
-            document.getElementById('view-kanban').classList.add('bg-dark-800', 'text-dark-300');
+            document.getElementById('view-kanban').classList.add('bg-gray-800', 'text-gray-300');
         }
         
         this.loadTasks();
@@ -499,7 +499,7 @@ class XaneneOps {
             if (columns[status].length > 0) {
                 container.innerHTML = columns[status].map(task => this.renderTaskCard(task)).join('');
             } else {
-                container.innerHTML = '<div class="text-center text-dark-500 py-8 text-sm">No tasks</div>';
+                container.innerHTML = '<div class="text-center text-gray-500 py-8 text-sm">No tasks</div>';
             }
         });
     }
@@ -516,19 +516,19 @@ class XaneneOps {
         const isOverdue = task.due_date && new Date(task.due_date) < new Date() && task.status !== 'completed';
         
         return `
-            <div class="task-card bg-dark-900 rounded-lg p-4 border-l-4 ${priorityColors[task.priority]} ${isOverdue ? 'ring-1 ring-red-500' : ''}" data-task-id="${task.id}">
+            <div class="task-card bg-gray-900 rounded-lg p-4 border-l-4 ${priorityColors[task.priority]} ${isOverdue ? 'ring-1 ring-red-500' : ''}" data-task-id="${task.id}">
                 <div class="flex items-start justify-between mb-2">
                     <h4 class="font-medium text-white text-sm">${task.title}</h4>
-                    <button onclick="app.openTaskModal(${task.id})" class="text-dark-400 hover:text-white">
+                    <button onclick="app.openTaskModal(${task.id})" class="text-gray-400 hover:text-white">
                         <i class="fas fa-ellipsis-v text-xs"></i>
                     </button>
                 </div>
-                ${task.description ? `<p class="text-dark-400 text-xs mb-2 line-clamp-2">${task.description}</p>` : ''}
+                ${task.description ? `<p class="text-gray-400 text-xs mb-2 line-clamp-2">${task.description}</p>` : ''}
                 <div class="flex items-center justify-between mt-3">
-                    <span class="text-xs px-2 py-0.5 rounded bg-dark-700 text-dark-300 capitalize">${task.category}</span>
-                    ${dueDate ? `<span class="text-dark-500 text-xs">${dueDate}</span>` : ''}
+                    <span class="text-xs px-2 py-0.5 rounded bg-gray-700 text-gray-300 capitalize">${task.category}</span>
+                    ${dueDate ? `<span class="text-gray-500 text-xs">${dueDate}</span>` : ''}
                 </div>
-                ${task.assignee ? `<p class="text-dark-500 text-xs mt-2"><i class="fas fa-user mr-1"></i>${task.assignee.full_name}</p>` : ''}
+                ${task.assignee ? `<p class="text-gray-500 text-xs mt-2"><i class="fas fa-user mr-1"></i>${task.assignee.full_name}</p>` : ''}
             </div>
         `;
     }
@@ -546,7 +546,7 @@ class XaneneOps {
                 };
                 
                 const statusColors = {
-                    pending: 'bg-dark-500/20 text-dark-300',
+                    pending: 'bg-gray-500/20 text-gray-300',
                     in_progress: 'bg-blue-500/20 text-blue-400',
                     completed: 'bg-primary-500/20 text-primary-400',
                 };
@@ -554,10 +554,10 @@ class XaneneOps {
                 const dueDate = task.due_date ? new Date(task.due_date).toLocaleDateString() : '-';
                 
                 return `
-                    <tr class="hover:bg-dark-900/50">
+                    <tr class="hover:bg-gray-900/50">
                         <td class="px-6 py-4">
                             <p class="text-white font-medium">${task.title}</p>
-                            ${task.description ? `<p class="text-dark-500 text-sm truncate max-w-xs">${task.description}</p>` : ''}
+                            ${task.description ? `<p class="text-gray-500 text-sm truncate max-w-xs">${task.description}</p>` : ''}
                         </td>
                         <td class="px-6 py-4">
                             <span class="text-xs px-2 py-1 rounded ${priorityColors[task.priority]} capitalize">${task.priority}</span>
@@ -566,13 +566,13 @@ class XaneneOps {
                             <span class="text-xs px-2 py-1 rounded ${statusColors[task.status]} capitalize">${task.status.replace('_', ' ')}</span>
                         </td>
                         <td class="px-6 py-4">
-                            <span class="text-dark-300 text-sm capitalize">${task.category}</span>
+                            <span class="text-gray-300 text-sm capitalize">${task.category}</span>
                         </td>
                         <td class="px-6 py-4">
-                            <span class="text-dark-300 text-sm">${dueDate}</span>
+                            <span class="text-gray-300 text-sm">${dueDate}</span>
                         </td>
                         <td class="px-6 py-4">
-                            ${task.assignee ? `<span class="text-dark-300 text-sm">${task.assignee.full_name}</span>` : '<span class="text-dark-500 text-sm">-</span>'}
+                            ${task.assignee ? `<span class="text-gray-300 text-sm">${task.assignee.full_name}</span>` : '<span class="text-gray-500 text-sm">-</span>'}
                         </td>
                         <td class="px-6 py-4 text-right">
                             <button onclick="app.openTaskModal(${task.id})" class="text-primary-500 hover:text-primary-400 text-sm">Edit</button>
@@ -581,7 +581,7 @@ class XaneneOps {
                 `;
             }).join('');
         } else {
-            tbody.innerHTML = '<tr><td colspan="7" class="text-center text-dark-400 py-8">No tasks found</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="7" class="text-center text-gray-400 py-8">No tasks found</td></tr>';
         }
     }
 
@@ -603,7 +603,7 @@ class XaneneOps {
                     const createdDate = new Date(user.created_at).toLocaleDateString();
                     
                     return `
-                        <tr class="hover:bg-dark-900/50">
+                        <tr class="hover:bg-gray-900/50">
                             <td class="px-6 py-4">
                                 <div class="flex items-center">
                                     <div class="w-8 h-8 rounded-full bg-primary-600/20 flex items-center justify-center mr-3">
@@ -613,7 +613,7 @@ class XaneneOps {
                                 </div>
                             </td>
                             <td class="px-6 py-4">
-                                <span class="text-dark-300 text-sm">${user.email}</span>
+                                <span class="text-gray-300 text-sm">${user.email}</span>
                             </td>
                             <td class="px-6 py-4">
                                 <span class="text-xs px-2 py-1 rounded ${roleColors[user.role]} capitalize">${user.role.replace('_', ' ')}</span>
@@ -624,7 +624,7 @@ class XaneneOps {
                                 </span>
                             </td>
                             <td class="px-6 py-4">
-                                <span class="text-dark-300 text-sm">${createdDate}</span>
+                                <span class="text-gray-300 text-sm">${createdDate}</span>
                             </td>
                             <td class="px-6 py-4 text-right">
                                 <button onclick="app.editUser(${user.id})" class="text-primary-500 hover:text-primary-400 text-sm mr-3">Edit</button>
@@ -634,7 +634,7 @@ class XaneneOps {
                     `;
                 }).join('');
             } else {
-                tbody.innerHTML = '<tr><td colspan="6" class="text-center text-dark-400 py-8">No users found</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center text-gray-400 py-8">No users found</td></tr>';
             }
         } catch (error) {
             console.error('Error loading users:', error);
@@ -656,30 +656,30 @@ class XaneneOps {
         const content = `
             <form id="event-form" class="space-y-4">
                 <div>
-                    <label class="block text-sm font-medium text-dark-300 mb-2">Title *</label>
-                    <input type="text" name="title" required class="w-full px-4 py-2 bg-dark-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Title *</label>
+                    <input type="text" name="title" required class="w-full px-4 py-2 bg-gray-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-dark-300 mb-2">Description</label>
-                    <textarea name="description" rows="3" class="w-full px-4 py-2 bg-dark-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white"></textarea>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Description</label>
+                    <textarea name="description" rows="3" class="w-full px-4 py-2 bg-gray-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white"></textarea>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-dark-300 mb-2">Location</label>
-                    <input type="text" name="location" class="w-full px-4 py-2 bg-dark-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Location</label>
+                    <input type="text" name="location" class="w-full px-4 py-2 bg-gray-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium text-dark-300 mb-2">Start Date & Time *</label>
-                        <input type="datetime-local" name="start_datetime" required class="w-full px-4 py-2 bg-dark-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Start Date & Time *</label>
+                        <input type="datetime-local" name="start_datetime" required class="w-full px-4 py-2 bg-gray-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-dark-300 mb-2">End Date & Time *</label>
-                        <input type="datetime-local" name="end_datetime" required class="w-full px-4 py-2 bg-dark-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
+                        <label class="block text-sm font-medium text-gray-300 mb-2">End Date & Time *</label>
+                        <input type="datetime-local" name="end_datetime" required class="w-full px-4 py-2 bg-gray-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
                     </div>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-dark-300 mb-2">Category *</label>
-                    <select name="category" required class="w-full px-4 py-2 bg-dark-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Category *</label>
+                    <select name="category" required class="w-full px-4 py-2 bg-gray-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
                         <option value="collection">Collection</option>
                         <option value="production">Production</option>
                         <option value="delivery">Delivery</option>
@@ -688,14 +688,14 @@ class XaneneOps {
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-dark-300 mb-2">Assign Staff</label>
-                    <select name="assigned_staff_ids" multiple class="w-full px-4 py-2 bg-dark-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white h-32">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Assign Staff</label>
+                    <select name="assigned_staff_ids" multiple class="w-full px-4 py-2 bg-gray-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white h-32">
                         ${this.users.map(u => `<option value="${u.id}">${u.full_name}</option>`).join('')}
                     </select>
-                    <p class="text-dark-500 text-xs mt-1">Hold Ctrl/Cmd to select multiple</p>
+                    <p class="text-gray-500 text-xs mt-1">Hold Ctrl/Cmd to select multiple</p>
                 </div>
                 <div class="flex justify-end space-x-3 pt-4">
-                    <button type="button" onclick="app.closeModal()" class="px-4 py-2 bg-dark-700 hover:bg-dark-600 text-white rounded-lg transition-colors">Cancel</button>
+                    <button type="button" onclick="app.closeModal()" class="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors">Cancel</button>
                     <button type="submit" class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors">Create Event</button>
                 </div>
             </form>
@@ -731,17 +731,17 @@ class XaneneOps {
         const content = `
             <form id="task-form" class="space-y-4">
                 <div>
-                    <label class="block text-sm font-medium text-dark-300 mb-2">Title *</label>
-                    <input type="text" name="title" required class="w-full px-4 py-2 bg-dark-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Title *</label>
+                    <input type="text" name="title" required class="w-full px-4 py-2 bg-gray-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-dark-300 mb-2">Description</label>
-                    <textarea name="description" rows="3" class="w-full px-4 py-2 bg-dark-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white"></textarea>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Description</label>
+                    <textarea name="description" rows="3" class="w-full px-4 py-2 bg-gray-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white"></textarea>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium text-dark-300 mb-2">Priority *</label>
-                        <select name="priority" required class="w-full px-4 py-2 bg-dark-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Priority *</label>
+                        <select name="priority" required class="w-full px-4 py-2 bg-gray-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
                             <option value="low">Low</option>
                             <option value="medium" selected>Medium</option>
                             <option value="high">High</option>
@@ -749,8 +749,8 @@ class XaneneOps {
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-dark-300 mb-2">Category *</label>
-                        <select name="category" required class="w-full px-4 py-2 bg-dark-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Category *</label>
+                        <select name="category" required class="w-full px-4 py-2 bg-gray-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
                             <option value="collection">Collection</option>
                             <option value="production">Production</option>
                             <option value="delivery">Delivery</option>
@@ -761,18 +761,18 @@ class XaneneOps {
                     </div>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-dark-300 mb-2">Due Date</label>
-                    <input type="datetime-local" name="due_date" class="w-full px-4 py-2 bg-dark-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Due Date</label>
+                    <input type="datetime-local" name="due_date" class="w-full px-4 py-2 bg-gray-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-dark-300 mb-2">Assign To</label>
-                    <select name="assigned_to_id" class="w-full px-4 py-2 bg-dark-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Assign To</label>
+                    <select name="assigned_to_id" class="w-full px-4 py-2 bg-gray-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
                         <option value="">Unassigned</option>
                         ${this.users.map(u => `<option value="${u.id}">${u.full_name}</option>`).join('')}
                     </select>
                 </div>
                 <div class="flex justify-end space-x-3 pt-4">
-                    <button type="button" onclick="app.closeModal()" class="px-4 py-2 bg-dark-700 hover:bg-dark-600 text-white rounded-lg transition-colors">Cancel</button>
+                    <button type="button" onclick="app.closeModal()" class="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors">Cancel</button>
                     <button type="submit" class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors">Create Task</button>
                 </div>
             </form>
@@ -809,17 +809,17 @@ class XaneneOps {
             const content = `
                 <form id="edit-task-form" class="space-y-4">
                     <div>
-                        <label class="block text-sm font-medium text-dark-300 mb-2">Title *</label>
-                        <input type="text" name="title" value="${task.title}" required class="w-full px-4 py-2 bg-dark-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Title *</label>
+                        <input type="text" name="title" value="${task.title}" required class="w-full px-4 py-2 bg-gray-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-dark-300 mb-2">Description</label>
-                        <textarea name="description" rows="3" class="w-full px-4 py-2 bg-dark-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">${task.description || ''}</textarea>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Description</label>
+                        <textarea name="description" rows="3" class="w-full px-4 py-2 bg-gray-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">${task.description || ''}</textarea>
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-dark-300 mb-2">Priority *</label>
-                            <select name="priority" required class="w-full px-4 py-2 bg-dark-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Priority *</label>
+                            <select name="priority" required class="w-full px-4 py-2 bg-gray-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
                                 <option value="low" ${task.priority === 'low' ? 'selected' : ''}>Low</option>
                                 <option value="medium" ${task.priority === 'medium' ? 'selected' : ''}>Medium</option>
                                 <option value="high" ${task.priority === 'high' ? 'selected' : ''}>High</option>
@@ -827,8 +827,8 @@ class XaneneOps {
                             </select>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-dark-300 mb-2">Status *</label>
-                            <select name="status" required class="w-full px-4 py-2 bg-dark-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Status *</label>
+                            <select name="status" required class="w-full px-4 py-2 bg-gray-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
                                 <option value="pending" ${task.status === 'pending' ? 'selected' : ''}>Pending</option>
                                 <option value="in_progress" ${task.status === 'in_progress' ? 'selected' : ''}>In Progress</option>
                                 <option value="completed" ${task.status === 'completed' ? 'selected' : ''}>Completed</option>
@@ -836,8 +836,8 @@ class XaneneOps {
                         </div>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-dark-300 mb-2">Category *</label>
-                        <select name="category" required class="w-full px-4 py-2 bg-dark-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Category *</label>
+                        <select name="category" required class="w-full px-4 py-2 bg-gray-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
                             <option value="collection" ${task.category === 'collection' ? 'selected' : ''}>Collection</option>
                             <option value="production" ${task.category === 'production' ? 'selected' : ''}>Production</option>
                             <option value="delivery" ${task.category === 'delivery' ? 'selected' : ''}>Delivery</option>
@@ -847,18 +847,18 @@ class XaneneOps {
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-dark-300 mb-2">Due Date</label>
-                        <input type="datetime-local" name="due_date" value="${task.due_date ? new Date(task.due_date).toISOString().slice(0, 16) : ''}" class="w-full px-4 py-2 bg-dark-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Due Date</label>
+                        <input type="datetime-local" name="due_date" value="${task.due_date ? new Date(task.due_date).toISOString().slice(0, 16) : ''}" class="w-full px-4 py-2 bg-gray-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-dark-300 mb-2">Assign To</label>
-                        <select name="assigned_to_id" class="w-full px-4 py-2 bg-dark-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Assign To</label>
+                        <select name="assigned_to_id" class="w-full px-4 py-2 bg-gray-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
                             <option value="">Unassigned</option>
                             ${this.users.map(u => `<option value="${u.id}" ${task.assignee?.id === u.id ? 'selected' : ''}>${u.full_name}</option>`).join('')}
                         </select>
                     </div>
                     <div class="flex justify-end space-x-3 pt-4">
-                        <button type="button" onclick="app.closeModal()" class="px-4 py-2 bg-dark-700 hover:bg-dark-600 text-white rounded-lg transition-colors">Cancel</button>
+                        <button type="button" onclick="app.closeModal()" class="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors">Cancel</button>
                         <button type="submit" class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors">Save Changes</button>
                     </div>
                 </form>
@@ -896,20 +896,20 @@ class XaneneOps {
         const content = `
             <form id="user-form" class="space-y-4">
                 <div>
-                    <label class="block text-sm font-medium text-dark-300 mb-2">Full Name *</label>
-                    <input type="text" name="full_name" required class="w-full px-4 py-2 bg-dark-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Full Name *</label>
+                    <input type="text" name="full_name" required class="w-full px-4 py-2 bg-gray-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-dark-300 mb-2">Email *</label>
-                    <input type="email" name="email" required class="w-full px-4 py-2 bg-dark-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Email *</label>
+                    <input type="email" name="email" required class="w-full px-4 py-2 bg-gray-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-dark-300 mb-2">Password *</label>
-                    <input type="password" name="password" required minlength="8" class="w-full px-4 py-2 bg-dark-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Password *</label>
+                    <input type="password" name="password" required minlength="8" class="w-full px-4 py-2 bg-gray-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-dark-300 mb-2">Role *</label>
-                    <select name="role" required class="w-full px-4 py-2 bg-dark-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Role *</label>
+                    <select name="role" required class="w-full px-4 py-2 bg-gray-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
                         <option value="field_staff">Field Staff</option>
                         <option value="sales">Sales</option>
                         <option value="operations_manager">Operations Manager</option>
@@ -917,7 +917,7 @@ class XaneneOps {
                     </select>
                 </div>
                 <div class="flex justify-end space-x-3 pt-4">
-                    <button type="button" onclick="app.closeModal()" class="px-4 py-2 bg-dark-700 hover:bg-dark-600 text-white rounded-lg transition-colors">Cancel</button>
+                    <button type="button" onclick="app.closeModal()" class="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors">Cancel</button>
                     <button type="submit" class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors">Create User</button>
                 </div>
             </form>
@@ -952,16 +952,16 @@ class XaneneOps {
         const content = `
             <form id="edit-user-form" class="space-y-4">
                 <div>
-                    <label class="block text-sm font-medium text-dark-300 mb-2">Full Name *</label>
-                    <input type="text" name="full_name" value="${user.full_name}" required class="w-full px-4 py-2 bg-dark-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Full Name *</label>
+                    <input type="text" name="full_name" value="${user.full_name}" required class="w-full px-4 py-2 bg-gray-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-dark-300 mb-2">Email *</label>
-                    <input type="email" name="email" value="${user.email}" required class="w-full px-4 py-2 bg-dark-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Email *</label>
+                    <input type="email" name="email" value="${user.email}" required class="w-full px-4 py-2 bg-gray-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-dark-300 mb-2">Role *</label>
-                    <select name="role" required class="w-full px-4 py-2 bg-dark-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Role *</label>
+                    <select name="role" required class="w-full px-4 py-2 bg-gray-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
                         <option value="field_staff" ${user.role === 'field_staff' ? 'selected' : ''}>Field Staff</option>
                         <option value="sales" ${user.role === 'sales' ? 'selected' : ''}>Sales</option>
                         <option value="operations_manager" ${user.role === 'operations_manager' ? 'selected' : ''}>Operations Manager</option>
@@ -969,14 +969,14 @@ class XaneneOps {
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-dark-300 mb-2">Status</label>
-                    <select name="is_active" class="w-full px-4 py-2 bg-dark-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Status</label>
+                    <select name="is_active" class="w-full px-4 py-2 bg-gray-900 border border-dark-600 rounded-lg focus:outline-none focus:border-primary-500 text-white">
                         <option value="true" ${user.is_active ? 'selected' : ''}>Active</option>
                         <option value="false" ${!user.is_active ? 'selected' : ''}>Inactive</option>
                     </select>
                 </div>
                 <div class="flex justify-end space-x-3 pt-4">
-                    <button type="button" onclick="app.closeModal()" class="px-4 py-2 bg-dark-700 hover:bg-dark-600 text-white rounded-lg transition-colors">Cancel</button>
+                    <button type="button" onclick="app.closeModal()" class="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors">Cancel</button>
                     <button type="submit" class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors">Save Changes</button>
                 </div>
             </form>
