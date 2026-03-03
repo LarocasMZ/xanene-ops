@@ -502,6 +502,70 @@ class XaneneOps {
                 container.innerHTML = '<div class="text-center text-gray-500 py-8 text-sm">No tasks</div>';
             }
         });
+        
+        // Add drop zone handlers
+        ['pending', 'in_progress', 'completed'].forEach(status => {
+            const container = document.getElementById(`kanban-${status}`);
+            container.addEventListener('dragover', (e) => this.handleDragOver(e));
+            container.addEventListener('drop', (e) => this.handleDrop(e, status));
+            container.addEventListener('dragenter', (e) => this.handleDragEnter(e));
+            container.addEventListener('dragleave', (e) => this.handleDragLeave(e));
+        });
+    }
+
+    // Drag and Drop Handlers
+    handleDragStart(event, taskId) {
+        event.dataTransfer.setData('text/plain', taskId);
+        event.dataTransfer.effectAllowed = 'move';
+        event.target.style.opacity = '0.5';
+    }
+
+    handleDragEnd(event) {
+        event.target.style.opacity = '1';
+    }
+
+    handleDragOver(event) {
+        event.preventDefault();
+        event.dataTransfer.dropEffect = 'move';
+    }
+
+    handleDragEnter(event) {
+        event.preventDefault();
+        event.currentTarget.classList.add('bg-blue-50');
+    }
+
+    handleDragLeave(event) {
+        event.currentTarget.classList.remove('bg-blue-50');
+    }
+
+    async handleDrop(event, newStatus) {
+        event.preventDefault();
+        event.currentTarget.classList.remove('bg-blue-50');
+        
+        const taskId = parseInt(event.dataTransfer.getData('text/plain'));
+        
+        try {
+            await this.api(`/tasks/${taskId}`, {
+                method: 'PUT',
+                body: JSON.stringify({ status: newStatus })
+            });
+            this.loadTasks();
+        } catch (error) {
+            alert('Error updating task status: ' + error.message);
+        }
+    }
+
+    async deleteTask(taskId) {
+        if (!confirm('Are you sure you want to delete this task?')) {
+            return;
+        }
+        
+        try {
+            await this.api(`/tasks/${taskId}`, { method: 'DELETE' });
+            this.loadTasks();
+        } catch (error) {
+            alert('Error deleting task: ' + error.message);
+        }
     }
 
     renderTaskCard(task) {
@@ -511,19 +575,28 @@ class XaneneOps {
             high: 'border-l-orange-500',
             critical: 'border-l-red-500',
         };
-        
+
         const dueDate = task.due_date ? new Date(task.due_date).toLocaleDateString() : '';
         const isOverdue = task.due_date && new Date(task.due_date) < new Date() && task.status !== 'completed';
-        
+
         return `
-            <div class="task-card bg-white rounded-lg p-4 border-l-4 ${priorityColors[task.priority]} ${isOverdue ? 'ring-1 ring-red-500' : ''}" data-task-id="${task.id}">
+            <div class="task-card bg-white rounded-lg p-4 border-l-4 ${priorityColors[task.priority]} ${isOverdue ? 'ring-1 ring-red-500' : ''}" 
+                 data-task-id="${task.id}" 
+                 draggable="true" 
+                 ondragstart="app.handleDragStart(event, ${task.id})"
+                 ondragend="app.handleDragEnd(event)">
                 <div class="flex items-start justify-between mb-2">
                     <h4 class="font-medium text-gray-900 text-sm">${task.title}</h4>
-                    <button onclick="app.openTaskModal(${task.id})" class="text-gray-400 hover:text-gray-900">
-                        <i class="fas fa-ellipsis-v text-xs"></i>
-                    </button>
+                    <div class="flex items-center space-x-1">
+                        <button onclick="app.openTaskModal(${task.id})" class="text-gray-400 hover:text-gray-900 p-1" title="Edit">
+                            <i class="fas fa-edit text-xs"></i>
+                        </button>
+                        <button onclick="app.deleteTask(${task.id})" class="text-gray-400 hover:text-red-600 p-1" title="Delete">
+                            <i class="fas fa-trash text-xs"></i>
+                        </button>
+                    </div>
                 </div>
-                ${task.description ? `<p class="text-gray-400 text-xs mb-2 line-clamp-2">${task.description}</p>` : ''}
+                ${task.description ? `<p class="text-gray-500 text-xs mb-2 line-clamp-2">${task.description}</p>` : ''}
                 <div class="flex items-center justify-between mt-3">
                     <span class="text-xs px-2 py-0.5 rounded bg-gray-200 text-gray-700 capitalize">${task.category}</span>
                     ${dueDate ? `<span class="text-gray-500 text-xs">${dueDate}</span>` : ''}
