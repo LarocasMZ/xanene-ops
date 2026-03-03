@@ -33,10 +33,16 @@ app.include_router(events_router, prefix="/api")
 app.include_router(tasks_router, prefix="/api")
 app.include_router(dashboard_router, prefix="/api")
 
-# Serve static files
+# Serve static files (if frontend exists)
 frontend_dir = Path(__file__).parent.parent.parent / "frontend"
-app.mount("/static", StaticFiles(directory=str(frontend_dir / "css"), html=True), name="static")
-app.mount("/js", StaticFiles(directory=str(frontend_dir / "js"), html=True), name="js")
+
+# Only mount static files if directories exist (handles Railway deployment)
+try:
+    if (frontend_dir / "css").exists() and (frontend_dir / "js").exists():
+        app.mount("/static", StaticFiles(directory=str(frontend_dir / "css"), html=True), name="static")
+        app.mount("/js", StaticFiles(directory=str(frontend_dir / "js"), html=True), name="js")
+except RuntimeError as e:
+    print(f"Note: Static files not mounted - {e}")
 
 
 @app.get("/")
