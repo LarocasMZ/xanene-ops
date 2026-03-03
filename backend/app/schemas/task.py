@@ -34,6 +34,7 @@ class TaskResponse(TaskBase):
     created_by_id: int
     created_at: datetime
     updated_at: datetime
+    assigned_to_id: Optional[int] = None
 
     class Config:
         from_attributes = True

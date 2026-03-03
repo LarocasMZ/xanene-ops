@@ -26,6 +26,7 @@ class XaneneOps {
     }
 
     setupDragAndDrop() {
+        console.log('Setting up drag and drop...');
         // Set up drop zones once on column containers
         const dropZones = {
             'kanban-pending': 'pending',
@@ -35,12 +36,14 @@ class XaneneOps {
 
         Object.entries(dropZones).forEach(([zoneId, status]) => {
             const zone = document.getElementById(zoneId);
+            console.log('Setting up zone:', zoneId, zone ? 'found' : 'NOT FOUND');
             if (!zone) return;
 
             zone.addEventListener('dragover', (e) => {
                 e.preventDefault();
                 e.dataTransfer.dropEffect = 'move';
                 zone.classList.add('bg-blue-50');
+                console.log('Drag over:', zoneId);
             });
 
             zone.addEventListener('dragleave', () => {
@@ -51,6 +54,7 @@ class XaneneOps {
                 e.preventDefault();
                 zone.classList.remove('bg-blue-50');
                 const taskId = parseInt(e.dataTransfer.getData('text/plain'));
+                console.log('Dropped task', taskId, 'on', zoneId, 'new status:', status);
                 this.updateTaskStatus(taskId, status);
             });
         });
@@ -588,7 +592,7 @@ class XaneneOps {
                     <span class="text-xs px-2 py-0.5 rounded bg-gray-200 text-gray-700 capitalize">${task.category}</span>
                     ${dueDate ? `<span class="text-gray-500 text-xs">${dueDate}</span>` : ''}
                 </div>
-                ${task.assignee ? `<p class="text-gray-500 text-xs mt-2"><i class="fas fa-user mr-1"></i>${task.assignee.full_name}</p>` : ''}
+                ${task.assigned_to_id ? `<p class="text-gray-500 text-xs mt-2"><i class="fas fa-user mr-1"></i>User #${task.assigned_to_id}</p>` : ''}
             </div>
         `;
     }
@@ -932,7 +936,7 @@ class XaneneOps {
                         <label class="block text-sm font-medium text-gray-700 mb-2">Assign To</label>
                         <select name="assigned_to_id" class="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-primary-500 text-gray-900">
                             <option value="">Unassigned</option>
-                            ${this.users.map(u => `<option value="${u.id}" ${task.assignee?.id === u.id ? 'selected' : ''}>${u.full_name}</option>`).join('')}
+                            ${this.users.map(u => `<option value="${u.id}" ${task.assigned_to_id === u.id ? 'selected' : ''}>${u.full_name}</option>`).join('')}
                         </select>
                     </div>
                     <div class="flex justify-end space-x-3 pt-4">
