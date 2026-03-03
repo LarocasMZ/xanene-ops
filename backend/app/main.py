@@ -8,6 +8,7 @@ from .core.config import settings
 from .api import auth_router, events_router, tasks_router, dashboard_router
 from .models import User, UserRole
 from .core.security import get_password_hash
+from .core.migrate import run_migrations
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -104,5 +105,13 @@ def create_initial_admin():
 # Create initial admin on startup
 @app.on_event("startup")
 async def startup_event():
+    # Run database migrations first
+    from sqlalchemy.orm import Session
+    db = Session(bind=engine)
+    try:
+        run_migrations(db)
+    finally:
+        db.close()
+    
     create_initial_admin()
     print(f"🚀 {settings.APP_NAME} v{settings.APP_VERSION} started")
