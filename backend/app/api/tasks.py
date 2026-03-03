@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from typing import List, Optional
 from ..core.database import get_db
 from ..models.user import User, UserRole
-from ..models.task import Task, TaskStatus, TaskPriority, TaskCategory
+from ..models.task import Task
 from ..schemas.task import TaskCreate, TaskUpdate, TaskResponse
 from .deps import get_current_user, require_admin_or_ops
 
@@ -36,9 +36,9 @@ async def create_task(
 
 @router.get("", response_model=List[TaskResponse])
 async def list_tasks(
-    status_filter: Optional[TaskStatus] = Query(None, alias="status"),
-    priority: Optional[TaskPriority] = Query(None),
-    category: Optional[TaskCategory] = Query(None),
+    status_filter: Optional[str] = Query(None, alias="status"),
+    priority: Optional[str] = Query(None),
+    category: Optional[str] = Query(None),
     assigned_to: Optional[int] = Query(None),
     include_completed: bool = Query(False),
     db: Session = Depends(get_db),
