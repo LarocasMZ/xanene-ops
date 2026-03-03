@@ -20,8 +20,55 @@ class XaneneOps {
 
     async init() {
         this.setupEventListeners();
+        this.setupDragAndDrop();
         this.updateCurrentDate();
         this.showApp();
+    }
+
+    setupDragAndDrop() {
+        // Set up drop zones once on column containers
+        const dropZones = {
+            'kanban-pending': 'pending',
+            'kanban-in_progress': 'in_progress',
+            'kanban-completed': 'completed'
+        };
+
+        Object.entries(dropZones).forEach(([zoneId, status]) => {
+            const zone = document.getElementById(zoneId);
+            if (!zone) return;
+
+            zone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+                zone.classList.add('bg-blue-50');
+            });
+
+            zone.addEventListener('dragleave', () => {
+                zone.classList.remove('bg-blue-50');
+            });
+
+            zone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                zone.classList.remove('bg-blue-50');
+                const taskId = parseInt(e.dataTransfer.getData('text/plain'));
+                this.updateTaskStatus(taskId, status);
+            });
+        });
+    }
+
+    async updateTaskStatus(taskId, newStatus) {
+        console.log('Updating task', taskId, 'to status', newStatus);
+        try {
+            await this.api(`/tasks/${taskId}`, {
+                method: 'PUT',
+                body: JSON.stringify({ status: newStatus })
+            });
+            console.log('Task updated successfully');
+            this.loadTasks();
+        } catch (error) {
+            console.error('Error updating task:', error);
+            alert('Error updating task status: ' + error.message);
+        }
     }
 
     setupEventListeners() {
@@ -506,78 +553,7 @@ class XaneneOps {
             } else {
                 container.innerHTML = '<div class="text-center text-gray-500 py-8 text-sm">No tasks</div>';
             }
-            
-            // Clear existing handlers and add new ones
-            const newContainer = container.cloneNode(true);
-            container.parentNode.replaceChild(newContainer, container);
-            
-            newContainer.addEventListener('dragover', (e) => this.handleDragOver(e));
-            newContainer.addEventListener('drop', (e) => this.handleDrop(e, status));
-            newContainer.addEventListener('dragenter', (e) => this.handleDragEnter(e));
-            newContainer.addEventListener('dragleave', (e) => this.handleDragLeave(e));
         });
-    }
-
-    // Drag and Drop Handlers
-    handleDragStart(event, taskId) {
-        event.dataTransfer.setData('text/plain', taskId);
-        event.dataTransfer.effectAllowed = 'move';
-        event.target.style.opacity = '0.5';
-    }
-
-    handleDragEnd(event) {
-        event.target.style.opacity = '1';
-    }
-
-    handleDragOver(event) {
-        event.preventDefault();
-        event.dataTransfer.dropEffect = 'move';
-    }
-
-    handleDragEnter(event) {
-        event.preventDefault();
-        event.currentTarget.classList.add('bg-blue-50');
-    }
-
-    handleDragLeave(event) {
-        event.currentTarget.classList.remove('bg-blue-50');
-    }
-
-    async handleDrop(event, newStatus) {
-        event.preventDefault();
-        event.stopPropagation();
-        
-        const container = event.currentTarget;
-        container.classList.remove('bg-blue-50');
-        
-        const taskId = parseInt(event.dataTransfer.getData('text/plain'));
-        
-        console.log('Dropping task', taskId, 'to status', newStatus);
-
-        try {
-            await this.api(`/tasks/${taskId}`, {
-                method: 'PUT',
-                body: JSON.stringify({ status: newStatus })
-            });
-            console.log('Task updated successfully');
-            this.loadTasks();
-        } catch (error) {
-            console.error('Error updating task:', error);
-            alert('Error updating task status: ' + error.message);
-        }
-    }
-
-    async deleteTask(taskId) {
-        if (!confirm('Are you sure you want to delete this task?')) {
-            return;
-        }
-        
-        try {
-            await this.api(`/tasks/${taskId}`, { method: 'DELETE' });
-            this.loadTasks();
-        } catch (error) {
-            alert('Error deleting task: ' + error.message);
-        }
     }
 
     renderTaskCard(task) {
@@ -592,11 +568,10 @@ class XaneneOps {
         const isOverdue = task.due_date && new Date(task.due_date) < new Date() && task.status !== 'completed';
 
         return `
-            <div class="task-card bg-white rounded-lg p-4 border-l-4 ${priorityColors[task.priority]} ${isOverdue ? 'ring-1 ring-red-500' : ''}" 
-                 data-task-id="${task.id}" 
-                 draggable="true" 
-                 ondragstart="app.handleDragStart(event, ${task.id})"
-                 ondragend="app.handleDragEnd(event)">
+            <div class="task-card bg-white rounded-lg p-4 border-l-4 ${priorityColors[task.priority]} ${isOverdue ? 'ring-1 ring-red-500' : ''} cursor-move"
+                 draggable="true"
+                 ondragstart="event.dataTransfer.setData('text/plain', ${task.id}); event.target.style.opacity='0.5';"
+                 ondragend="event.target.style.opacity='1';">
                 <div class="flex items-start justify-between mb-2">
                     <h4 class="font-medium text-gray-900 text-sm">${task.title}</h4>
                     <div class="flex items-center space-x-1">
@@ -616,6 +591,19 @@ class XaneneOps {
                 ${task.assignee ? `<p class="text-gray-500 text-xs mt-2"><i class="fas fa-user mr-1"></i>${task.assignee.full_name}</p>` : ''}
             </div>
         `;
+    }
+
+    async deleteTask(taskId) {
+        if (!confirm('Are you sure you want to delete this task?')) {
+            return;
+        }
+
+        try {
+            await this.api(`/tasks/${taskId}`, { method: 'DELETE' });
+            this.loadTasks();
+        } catch (error) {
+            alert('Error deleting task: ' + error.message);
+        }
     }
 
     renderTaskList(tasks) {
