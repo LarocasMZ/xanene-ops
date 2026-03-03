@@ -805,7 +805,16 @@ class XaneneOps {
         });
     }
 
-    openNewTaskModal() {
+    async openNewTaskModal() {
+        // Load users if not already loaded
+        if (this.users.length === 0) {
+            try {
+                this.users = await this.api('/auth/users');
+            } catch (error) {
+                console.error('Error loading users:', error);
+            }
+        }
+
         const content = `
             <form id="task-form" class="space-y-4">
                 <div>
@@ -886,6 +895,15 @@ class XaneneOps {
     }
 
     async openTaskModal(taskId) {
+        // Load users if not already loaded
+        if (this.users.length === 0) {
+            try {
+                this.users = await this.api('/auth/users');
+            } catch (error) {
+                console.error('Error loading users:', error);
+            }
+        }
+
         try {
             const task = await this.api(`/tasks/${taskId}`);
             
