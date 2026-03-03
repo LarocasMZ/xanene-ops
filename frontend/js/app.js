@@ -76,26 +76,31 @@ class XaneneOps {
             'Content-Type': 'application/json',
             ...options.headers,
         };
-        
+
         if (this.token && this.token !== 'test-token') {
             headers['Authorization'] = `Bearer ${this.token}`;
         }
-        
+
         const response = await fetch(`${this.apiBase}${endpoint}`, {
             ...options,
             headers,
         });
-        
+
         if (response.status === 401) {
             throw new Error('Unauthorized');
         }
-        
+
+        // Handle 204 No Content (delete operations)
+        if (response.status === 204) {
+            return null;
+        }
+
         const data = await response.json();
-        
+
         if (!response.ok) {
             throw new Error(data.detail || 'An error occurred');
         }
-        
+
         return data;
     }
 
