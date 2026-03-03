@@ -31,12 +31,12 @@ async def get_dashboard(
     # Calculate metrics
     total_active_tasks = db.query(Task).filter(
         Task.is_active == True,
-        Task.status != TaskStatus.COMPLETED,
+        Task.status != "completed",
     ).count()
 
     tasks_completed_this_week = db.query(Task).filter(
         Task.is_active == True,
-        Task.status == TaskStatus.COMPLETED,
+        Task.status == "completed",
         Task.completed_at >= week_start,
         Task.completed_at < week_end,
     ).count()
@@ -56,7 +56,7 @@ async def get_dashboard(
     overdue_tasks = db.query(Task).filter(
         Task.is_active == True,
         Task.due_date < now,
-        Task.status != TaskStatus.COMPLETED,
+        Task.status != "completed",
     ).count()
 
     events_today = db.query(Event).filter(
@@ -77,7 +77,7 @@ async def get_dashboard(
     # Get today's tasks
     today_tasks_query = db.query(Task).filter(
         Task.is_active == True,
-        Task.status != TaskStatus.COMPLETED,
+        Task.status != "completed",
         Task.due_date >= today_start,
         Task.due_date < today_start + timedelta(days=1),
     ).limit(5)
@@ -114,7 +114,7 @@ async def get_dashboard(
     overdue_tasks_query = db.query(Task).filter(
         Task.is_active == True,
         Task.due_date < now,
-        Task.status != TaskStatus.COMPLETED,
+        Task.status != "completed",
     ).order_by(Task.due_date).limit(5)
 
     overdue_list = []

@@ -49,7 +49,7 @@ async def list_tasks(
     if status_filter:
         query = query.filter(Task.status == status_filter)
     elif not include_completed:
-        query = query.filter(Task.status != TaskStatus.COMPLETED)
+        query = query.filter(Task.status != "completed")
 
     if priority:
         query = query.filter(Task.priority == priority)
@@ -74,7 +74,7 @@ async def get_my_tasks(
         .filter(
             Task.is_active == True,
             Task.assigned_to_id == current_user.id,
-            Task.status != TaskStatus.COMPLETED,
+            Task.status != "completed",
         )
         .order_by(Task.due_date.nullsfirst(), Task.created_at.desc())
         .all()
@@ -93,7 +93,7 @@ async def get_overdue_tasks(
         .filter(
             Task.is_active == True,
             Task.due_date < now,
-            Task.status != TaskStatus.COMPLETED,
+            Task.status != "completed",
         )
         .order_by(Task.due_date)
         .all()
@@ -147,7 +147,7 @@ async def update_task(
         setattr(task, field, value)
 
     # Set completed_at when status changes to completed
-    if task.status == TaskStatus.COMPLETED and not task.completed_at:
+    if task.status == "completed" and not task.completed_at:
         task.completed_at = datetime.utcnow()
 
     db.commit()
@@ -181,7 +181,7 @@ async def get_kanban_board(
     """Get tasks grouped by status for Kanban view"""
     tasks = db.query(Task).filter(
         Task.is_active == True,
-        Task.status != TaskStatus.COMPLETED,
+        Task.status != "completed",
     ).all()
 
     kanban = {
