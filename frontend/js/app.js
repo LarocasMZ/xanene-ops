@@ -340,11 +340,11 @@ class XaneneOps {
             training: 'bg-blue-500/20 text-blue-400',
             sales: 'bg-pink-500/20 text-pink-400',
         };
-        
+
         const startDate = new Date(event.start_datetime);
         const endDate = new Date(event.end_datetime);
         const timeStr = `${startDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} - ${endDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
-        
+
         return `
             <div class="flex items-center justify-between p-3 bg-white rounded-lg">
                 <div class="flex-1">
@@ -354,6 +354,14 @@ class XaneneOps {
                         <span class="text-gray-500 text-xs">${timeStr}</span>
                     </div>
                     ${event.location ? `<p class="text-gray-500 text-xs mt-1"><i class="fas fa-map-marker-alt mr-1"></i>${event.location}</p>` : ''}
+                </div>
+                <div class="flex items-center space-x-1 ml-2">
+                    <button onclick="app.openEditEventModal(${event.id})" class="text-gray-400 hover:text-gray-900 p-1" title="Editar">
+                        <i class="fas fa-edit text-xs"></i>
+                    </button>
+                    <button onclick="app.deleteEvent(${event.id})" class="text-gray-400 hover:text-red-600 p-1" title="Excluir">
+                        <i class="fas fa-trash text-xs"></i>
+                    </button>
                 </div>
             </div>
         `;
@@ -806,6 +814,113 @@ class XaneneOps {
                 alert(error.message);
             }
         });
+    }
+
+    async deleteEvent(eventId) {
+        if (!confirm('Tem certeza que deseja excluir este evento?')) {
+            return;
+        }
+        
+        try {
+            await this.api(`/events/${eventId}`, { method: 'DELETE' });
+            this.renderCalendar();
+            this.loadUpcomingEvents();
+        } catch (error) {
+            alert('Erro ao excluir evento: ' + error.message);
+        }
+    }
+
+    async openEditEventModal(eventId) {
+        // Load users if not already loaded
+        if (this.users.length === 0) {
+            try {
+                this.users = await this.api('/auth/users');
+            } catch (error) {
+                console.error('Error loading users:', error);
+            }
+        }
+
+        try {
+            const event = await this.api(`/events/${eventId}`);
+            
+            const startDate = new Date(event.start_datetime);
+            const endDate = new Date(event.end_datetime);
+            
+            const content = `
+                <form id="edit-event-form" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Título *</label>
+                        <input type="text" name="title" value="${event.title}" required class="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-primary-500 text-gray-900">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Descrição</label>
+                        <textarea name="description" rows="3" class="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-primary-500 text-gray-900">${event.description || ''}</textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Local</label>
+                        <input type="text" name="location" value="${event.location || ''}" class="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-primary-500 text-gray-900">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Data/Hora Início *</label>
+                            <input type="datetime-local" name="start_datetime" value="${startDate.toISOString().slice(0, 16)}" required class="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-primary-500 text-gray-900">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Data/Hora Fim *</label>
+                            <input type="datetime-local" name="end_datetime" value="${endDate.toISOString().slice(0, 16)}" required class="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-primary-500 text-gray-900">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Categoria *</label>
+                        <select name="category" required class="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-primary-500 text-gray-900">
+                            <option value="collection" ${event.category === 'collection' ? 'selected' : ''}>Coleta</option>
+                            <option value="production" ${event.category === 'production' ? 'selected' : ''}>Produção</option>
+                            <option value="delivery" ${event.category === 'delivery' ? 'selected' : ''}>Entrega</option>
+                            <option value="training" ${event.category === 'training' ? 'selected' : ''}>Treinamento</option>
+                            <option value="sales" ${event.category === 'sales' ? 'selected' : ''}>Vendas</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Equipe</label>
+                        <select name="assigned_staff_ids" multiple class="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-primary-500 text-gray-900 h-32">
+                            ${this.users.map(u => `<option value="${u.id}" ${event.assigned_staff_ids?.includes(u.id) ? 'selected' : ''}>${u.full_name}</option>`).join('')}
+                        </select>
+                        <p class="text-gray-500 text-xs mt-1">Segure Ctrl/Cmd para selecionar múltiplos</p>
+                    </div>
+                    <div class="flex justify-end space-x-3 pt-4">
+                        <button type="button" onclick="app.closeModal()" class="px-4 py-2 bg-gray-200 hover:bg-gray-600 text-gray-900 rounded-lg transition-colors">Cancelar</button>
+                        <button type="submit" class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-gray-900 rounded-lg transition-colors">Salvar Alterações</button>
+                    </div>
+                </form>
+            `;
+
+            this.openModal(`Editar Evento: ${event.title}`, content);
+
+            document.getElementById('edit-event-form')?.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                const data = {
+                    title: formData.get('title'),
+                    description: formData.get('description'),
+                    location: formData.get('location'),
+                    start_datetime: formData.get('start_datetime'),
+                    end_datetime: formData.get('end_datetime'),
+                    category: formData.get('category'),
+                    assigned_staff_ids: formData.getAll('assigned_staff_ids').map(Number),
+                };
+
+                try {
+                    await this.api(`/events/${eventId}`, { method: 'PUT', body: JSON.stringify(data) });
+                    this.closeModal();
+                    this.renderCalendar();
+                    this.loadUpcomingEvents();
+                } catch (error) {
+                    alert(error.message);
+                }
+            });
+        } catch (error) {
+            alert(error.message);
+        }
     }
 
     async openNewTaskModal() {
