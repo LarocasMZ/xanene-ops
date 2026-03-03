@@ -27,25 +27,34 @@ def run_migrations() -> bool:
     """
     try:
         import psycopg2
-        print("🔄 Running database migrations...")
+        print("=" * 50)
+        print("🔧 RUNNING DATABASE MIGRATIONS...")
+        print("=" * 50)
         
         # Get database URL from environment
         database_url = os.getenv("DATABASE_URL")
+        print(f"📡 DATABASE_URL found: {bool(database_url)}")
+        
         if not database_url:
-            print("❌ DATABASE_URL not found")
+            print("❌ DATABASE_URL not found in environment")
             return False
         
         # Convert Railway DB URL format if needed
         if database_url.startswith("postgresql://"):
             database_url = database_url.replace("postgresql://", "postgres://", 1)
         
+        print(f"🔗 Connecting to database...")
+        
         # Connect to database
         conn = psycopg2.connect(database_url)
         conn.autocommit = True
         cur = conn.cursor()
         
+        print(f"✅ Database connected!")
+        
         # Drop old constraint
         try:
+            print(f"🔨 Dropping old constraint...")
             cur.execute("ALTER TABLE tasks DROP CONSTRAINT IF EXISTS valid_category")
             print("✅ Dropped old category constraint")
         except Exception as e:
@@ -55,16 +64,20 @@ def run_migrations() -> bool:
         categories_str = ', '.join([f"'{c}'" for c in NEW_CATEGORIES])
         sql = f"ALTER TABLE tasks ADD CONSTRAINT valid_category CHECK (category IN ({categories_str}))"
         
+        print(f"🔨 Adding new constraint with {len(NEW_CATEGORIES)} categories...")
         cur.execute(sql)
         print(f"✅ Database migrations completed! Added {len(NEW_CATEGORIES)} categories")
+        print("=" * 50)
         
         cur.close()
         conn.close()
         return True
         
-    except ImportError:
-        print("❌ psycopg2 not installed, skipping migrations")
+    except ImportError as e:
+        print(f"❌ psycopg2 not installed: {e}")
+        print("⚠️ Skipping migrations, app may fail on category validation")
         return False
     except Exception as e:
-        print(f"❌ Migration failed: {e}")
+        print(f"❌ Migration failed: {type(e).__name__}: {e}")
+        print("⚠️ Continuing without migrations")
         return False

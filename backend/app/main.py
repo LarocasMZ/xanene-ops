@@ -80,6 +80,14 @@ async def health_check():
     return {"status": "healthy", "app": settings.APP_NAME, "version": settings.APP_VERSION}
 
 
+@app.get("/api/run-migrations")
+async def run_migrations_endpoint():
+    """Manual migration endpoint - for debugging"""
+    from .core.migrate import run_migrations
+    success = run_migrations()
+    return {"success": success, "message": "Migration completed" if success else "Migration failed"}
+
+
 def create_initial_admin():
     """Create initial admin user if none exists"""
     from sqlalchemy.orm import Session
