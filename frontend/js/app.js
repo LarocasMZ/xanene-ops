@@ -841,12 +841,73 @@ class XaneneOps {
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Categoria *</label>
                         <select name="category" required class="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-primary-500 text-gray-900">
-                            <option value="collection">Coleta</option>
-                            <option value="production">Produção</option>
-                            <option value="delivery">Entrega</option>
-                            <option value="training">Treinamento</option>
-                            <option value="sales">Vendas</option>
-                            <option value="admin">Admin</option>
+                            <option value="">Selecione uma categoria...</option>
+                            <optgroup label="📦 Operações de Campo (Coleta)">
+                                <option value="coleta_residuos">Coleta de Resíduos Orgânicos</option>
+                                <option value="rota_coleta">Rota de Coleta Semanal</option>
+                                <option value="visita_tecnica">Visita Técnica a Parceiros</option>
+                                <option value="vistoria_conteineres">Vistoria de Contentores</option>
+                                <option value="limpeza_pontos_coleta">Limpeza de Pontos de Coleta</option>
+                            </optgroup>
+                            <optgroup label="🪱 Produção (BSF)">
+                                <option value="alimentacao_larvas">Alimentação das Larvas</option>
+                                <option value="controle_temperatura">Controle de Temperatura/Umidade</option>
+                                <option value="colheita_larvas">Colheita de Larvas</option>
+                                <option value="processamento_substrato">Processamento de Substrato</option>
+                                <option value="monitoramento_postura">Monitoramento de Postura</option>
+                                <option value="manejo_pupas">Manejo de Pupas</option>
+                            </optgroup>
+                            <optgroup label="📦 Logística e Entrega">
+                                <option value="entrega_produto">Entrega de Produto Final</option>
+                                <option value="distribuicao_adubo">Distribuição de Adubo/Húmus</option>
+                                <option value="transporte_residuos">Transporte de Resíduos</option>
+                                <option value="controle_frota">Controle de Frota</option>
+                                <option value="manutencao_veiculos">Manutenção de Veículos</option>
+                            </optgroup>
+                            <optgroup label="💼 Comercial e Vendas">
+                                <option value="prospeccao_clientes">Prospecção de Novos Clientes</option>
+                                <option value="reuniao_parceiros">Reunião com Parceiros</option>
+                                <option value="follow_up_propostas">Follow-up de Propostas</option>
+                                <option value="visita_comercial">Visita Comercial</option>
+                                <option value="apresentacao_institucional">Apresentação Institucional</option>
+                                <option value="negociacao_contratos">Negociação de Contratos</option>
+                            </optgroup>
+                            <optgroup label="👥 Recursos Humanos">
+                                <option value="treinamento_equipe">Treinamento de Equipe</option>
+                                <option value="integracao_funcionarios">Integração de Novos Funcionários</option>
+                                <option value="avaliacao_desempenho">Avaliação de Desempenho</option>
+                                <option value="reuniao_equipe">Reunião de Equipe</option>
+                                <option value="planejamento_escala">Planejamento de Escala</option>
+                            </optgroup>
+                            <optgroup label="🔧 Manutenção e Infraestrutura">
+                                <option value="manutencao_preventiva">Manutenção Preventiva de Equipamentos</option>
+                                <option value="reparo_instalacoes">Reparo de Instalações</option>
+                                <option value="limpeza_geral">Limpeza Geral</option>
+                                <option value="controle_estoque">Controle de Estoque</option>
+                                <option value="compra_suprimentos">Compra de Suprimentos</option>
+                            </optgroup>
+                            <optgroup label="📊 Administrativo e Financeiro">
+                                <option value="fechamento_mensal">Fechamento Mensal</option>
+                                <option value="emissao_notas">Emissão de Notas Fiscais</option>
+                                <option value="contas_pagar_receber">Contas a Pagar/Receber</option>
+                                <option value="relatorio_producao">Relatório de Produção</option>
+                                <option value="controle_indicadores">Controle de Indicadores</option>
+                                <option value="reuniao_diretoria">Reunião de Diretoria</option>
+                            </optgroup>
+                            <optgroup label="🌱 Sustentabilidade e Qualidade">
+                                <option value="auditoria_processos">Auditoria de Processos</option>
+                                <option value="controle_qualidade">Controle de Qualidade</option>
+                                <option value="monitoramento_ambiental">Monitoramento Ambiental</option>
+                                <option value="certificacoes">Certificações</option>
+                                <option value="pesquisa_desenvolvimento">Pesquisa e Desenvolvimento</option>
+                            </optgroup>
+                            <optgroup label="📢 Marketing e Comunicação">
+                                <option value="gestao_redes_sociais">Gestão de Redes Sociais</option>
+                                <option value="criacao_conteudo">Criação de Conteúdo</option>
+                                <option value="eventos_institucionais">Eventos Institucionais</option>
+                                <option value="material_promocional">Material Promocional</option>
+                                <option value="relacionamento_imprensa">Relacionamento com Imprensa</option>
+                            </optgroup>
                         </select>
                     </div>
                 </div>
@@ -942,12 +1003,72 @@ class XaneneOps {
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Categoria *</label>
                         <select name="category" required class="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-primary-500 text-gray-900">
-                            <option value="collection" ${task.category === 'collection' ? 'selected' : ''}>Coleta</option>
-                            <option value="production" ${task.category === 'production' ? 'selected' : ''}>Produção</option>
-                            <option value="delivery" ${task.category === 'delivery' ? 'selected' : ''}>Entrega</option>
-                            <option value="training" ${task.category === 'training' ? 'selected' : ''}>Treinamento</option>
-                            <option value="sales" ${task.category === 'sales' ? 'selected' : ''}>Vendas</option>
-                            <option value="admin" ${task.category === 'admin' ? 'selected' : ''}>Admin</option>
+                            <optgroup label="📦 Operações de Campo (Coleta)">
+                                <option value="coleta_residuos" ${task.category === 'coleta_residuos' ? 'selected' : ''}>Coleta de Resíduos Orgânicos</option>
+                                <option value="rota_coleta" ${task.category === 'rota_coleta' ? 'selected' : ''}>Rota de Coleta Semanal</option>
+                                <option value="visita_tecnica" ${task.category === 'visita_tecnica' ? 'selected' : ''}>Visita Técnica a Parceiros</option>
+                                <option value="vistoria_conteineres" ${task.category === 'vistoria_conteineres' ? 'selected' : ''}>Vistoria de Contentores</option>
+                                <option value="limpeza_pontos_coleta" ${task.category === 'limpeza_pontos_coleta' ? 'selected' : ''}>Limpeza de Pontos de Coleta</option>
+                            </optgroup>
+                            <optgroup label="🪱 Produção (BSF)">
+                                <option value="alimentacao_larvas" ${task.category === 'alimentacao_larvas' ? 'selected' : ''}>Alimentação das Larvas</option>
+                                <option value="controle_temperatura" ${task.category === 'controle_temperatura' ? 'selected' : ''}>Controle de Temperatura/Umidade</option>
+                                <option value="colheita_larvas" ${task.category === 'colheita_larvas' ? 'selected' : ''}>Colheita de Larvas</option>
+                                <option value="processamento_substrato" ${task.category === 'processamento_substrato' ? 'selected' : ''}>Processamento de Substrato</option>
+                                <option value="monitoramento_postura" ${task.category === 'monitoramento_postura' ? 'selected' : ''}>Monitoramento de Postura</option>
+                                <option value="manejo_pupas" ${task.category === 'manejo_pupas' ? 'selected' : ''}>Manejo de Pupas</option>
+                            </optgroup>
+                            <optgroup label="📦 Logística e Entrega">
+                                <option value="entrega_produto" ${task.category === 'entrega_produto' ? 'selected' : ''}>Entrega de Produto Final</option>
+                                <option value="distribuicao_adubo" ${task.category === 'distribuicao_adubo' ? 'selected' : ''}>Distribuição de Adubo/Húmus</option>
+                                <option value="transporte_residuos" ${task.category === 'transporte_residuos' ? 'selected' : ''}>Transporte de Resíduos</option>
+                                <option value="controle_frota" ${task.category === 'controle_frota' ? 'selected' : ''}>Controle de Frota</option>
+                                <option value="manutencao_veiculos" ${task.category === 'manutencao_veiculos' ? 'selected' : ''}>Manutenção de Veículos</option>
+                            </optgroup>
+                            <optgroup label="💼 Comercial e Vendas">
+                                <option value="prospeccao_clientes" ${task.category === 'prospeccao_clientes' ? 'selected' : ''}>Prospecção de Novos Clientes</option>
+                                <option value="reuniao_parceiros" ${task.category === 'reuniao_parceiros' ? 'selected' : ''}>Reunião com Parceiros</option>
+                                <option value="follow_up_propostas" ${task.category === 'follow_up_propostas' ? 'selected' : ''}>Follow-up de Propostas</option>
+                                <option value="visita_comercial" ${task.category === 'visita_comercial' ? 'selected' : ''}>Visita Comercial</option>
+                                <option value="apresentacao_institucional" ${task.category === 'apresentacao_institucional' ? 'selected' : ''}>Apresentação Institucional</option>
+                                <option value="negociacao_contratos" ${task.category === 'negociacao_contratos' ? 'selected' : ''}>Negociação de Contratos</option>
+                            </optgroup>
+                            <optgroup label="👥 Recursos Humanos">
+                                <option value="treinamento_equipe" ${task.category === 'treinamento_equipe' ? 'selected' : ''}>Treinamento de Equipe</option>
+                                <option value="integracao_funcionarios" ${task.category === 'integracao_funcionarios' ? 'selected' : ''}>Integração de Novos Funcionários</option>
+                                <option value="avaliacao_desempenho" ${task.category === 'avaliacao_desempenho' ? 'selected' : ''}>Avaliação de Desempenho</option>
+                                <option value="reuniao_equipe" ${task.category === 'reuniao_equipe' ? 'selected' : ''}>Reunião de Equipe</option>
+                                <option value="planejamento_escala" ${task.category === 'planejamento_escala' ? 'selected' : ''}>Planejamento de Escala</option>
+                            </optgroup>
+                            <optgroup label="🔧 Manutenção e Infraestrutura">
+                                <option value="manutencao_preventiva" ${task.category === 'manutencao_preventiva' ? 'selected' : ''}>Manutenção Preventiva de Equipamentos</option>
+                                <option value="reparo_instalacoes" ${task.category === 'reparo_instalacoes' ? 'selected' : ''}>Reparo de Instalações</option>
+                                <option value="limpeza_geral" ${task.category === 'limpeza_geral' ? 'selected' : ''}>Limpeza Geral</option>
+                                <option value="controle_estoque" ${task.category === 'controle_estoque' ? 'selected' : ''}>Controle de Estoque</option>
+                                <option value="compra_suprimentos" ${task.category === 'compra_suprimentos' ? 'selected' : ''}>Compra de Suprimentos</option>
+                            </optgroup>
+                            <optgroup label="📊 Administrativo e Financeiro">
+                                <option value="fechamento_mensal" ${task.category === 'fechamento_mensal' ? 'selected' : ''}>Fechamento Mensal</option>
+                                <option value="emissao_notas" ${task.category === 'emissao_notas' ? 'selected' : ''}>Emissão de Notas Fiscais</option>
+                                <option value="contas_pagar_receber" ${task.category === 'contas_pagar_receber' ? 'selected' : ''}>Contas a Pagar/Receber</option>
+                                <option value="relatorio_producao" ${task.category === 'relatorio_producao' ? 'selected' : ''}>Relatório de Produção</option>
+                                <option value="controle_indicadores" ${task.category === 'controle_indicadores' ? 'selected' : ''}>Controle de Indicadores</option>
+                                <option value="reuniao_diretoria" ${task.category === 'reuniao_diretoria' ? 'selected' : ''}>Reunião de Diretoria</option>
+                            </optgroup>
+                            <optgroup label="🌱 Sustentabilidade e Qualidade">
+                                <option value="auditoria_processos" ${task.category === 'auditoria_processos' ? 'selected' : ''}>Auditoria de Processos</option>
+                                <option value="controle_qualidade" ${task.category === 'controle_qualidade' ? 'selected' : ''}>Controle de Qualidade</option>
+                                <option value="monitoramento_ambiental" ${task.category === 'monitoramento_ambiental' ? 'selected' : ''}>Monitoramento Ambiental</option>
+                                <option value="certificacoes" ${task.category === 'certificacoes' ? 'selected' : ''}>Certificações</option>
+                                <option value="pesquisa_desenvolvimento" ${task.category === 'pesquisa_desenvolvimento' ? 'selected' : ''}>Pesquisa e Desenvolvimento</option>
+                            </optgroup>
+                            <optgroup label="📢 Marketing e Comunicação">
+                                <option value="gestao_redes_sociais" ${task.category === 'gestao_redes_sociais' ? 'selected' : ''}>Gestão de Redes Sociais</option>
+                                <option value="criacao_conteudo" ${task.category === 'criacao_conteudo' ? 'selected' : ''}>Criação de Conteúdo</option>
+                                <option value="eventos_institucionais" ${task.category === 'eventos_institucionais' ? 'selected' : ''}>Eventos Institucionais</option>
+                                <option value="material_promocional" ${task.category === 'material_promocional' ? 'selected' : ''}>Material Promocional</option>
+                                <option value="relacionamento_imprensa" ${task.category === 'relacionamento_imprensa' ? 'selected' : ''}>Relacionamento com Imprensa</option>
+                            </optgroup>
                         </select>
                     </div>
                     <div>
