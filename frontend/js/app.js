@@ -783,15 +783,16 @@ class XaneneOps {
         document.getElementById('task-form')?.addEventListener('submit', async (e) => {
             e.preventDefault();
             const formData = new FormData(e.target);
+            const dueDateValue = formData.get('due_date');
             const data = {
                 title: formData.get('title'),
                 description: formData.get('description'),
                 priority: formData.get('priority'),
                 category: formData.get('category'),
-                due_date: formData.get('due_date') || null,
+                due_date: dueDateValue ? dueDateValue : null,
                 assigned_to_id: formData.get('assigned_to_id') ? parseInt(formData.get('assigned_to_id')) : null,
             };
-            
+
             try {
                 await this.api('/tasks', { method: 'POST', body: JSON.stringify(data) });
                 this.closeModal();
@@ -869,16 +870,17 @@ class XaneneOps {
             document.getElementById('edit-task-form')?.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const formData = new FormData(e.target);
+                const dueDateValue = formData.get('due_date');
                 const data = {
                     title: formData.get('title'),
                     description: formData.get('description'),
                     priority: formData.get('priority'),
                     status: formData.get('status'),
                     category: formData.get('category'),
-                    due_date: formData.get('due_date') || null,
+                    due_date: dueDateValue ? dueDateValue : null,
                     assigned_to_id: formData.get('assigned_to_id') ? parseInt(formData.get('assigned_to_id')) : null,
                 };
-                
+
                 try {
                     await this.api(`/tasks/${taskId}`, { method: 'PUT', body: JSON.stringify(data) });
                     this.closeModal();
