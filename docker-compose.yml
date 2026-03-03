@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: xanene_db
+    environment:
+      POSTGRES_DB: xanene_ops
+      POSTGRES_USER: xanene
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-xanene_secure_pass_2024}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U xanene -d xanene_ops"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - xanene_network
+
+  app:
+    build: .
+    container_name: xanene_app
+    environment:
+      DATABASE_URL: postgresql://xanene:${DB_PASSWORD:-xanene_secure_pass_2024}@db:5432/xanene_ops
+      SECRET_KEY: ${SECRET_KEY:-your-super-secret-key-change-in-production-min-32-chars}
+      DEBUG: "false"
+      CORS_ORIGINS: '["http://localhost:8000", "https://your-domain.com"]'
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    networks:
+      - xanene_network
+
+  nginx:
+    image: nginx:alpine
+    container_name: xanene_nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - ./frontend:/var/www/frontend:ro
+    depends_on:
+      - app
+    restart: unless-stopped
+    networks:
+      - xanene_network
+
+volumes:
+  postgres_data:
+
+networks:
+  xanene_network:
+    driver: bridge

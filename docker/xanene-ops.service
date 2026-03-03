@@ -1,0 +1,32 @@
+[Unit]
+Description=XANENE OPS - Operations Management System
+After=network.target postgresql.service
+Wants=postgresql.service
+
+[Service]
+Type=notify
+User=xanene
+Group=xanene
+WorkingDirectory=/opt/xanene_ops
+Environment="PATH=/opt/xanene_ops/venv/bin"
+Environment="DATABASE_URL=postgresql://xanene:YOUR_DB_PASSWORD@localhost:5432/xanene_ops"
+Environment="SECRET_KEY=YOUR_SECRET_KEY_MIN_32_CHARACTERS"
+Environment="DEBUG=false"
+Environment="CORS_ORIGINS=[\"https://your-domain.com\"]"
+ExecStart=/opt/xanene_ops/venv/bin/gunicorn backend.app.main:app -w 4 -k uvicorn.workers.UvicornWorker --bind 127.0.0.1:8000
+ExecReload=/bin/kill -s HUP $MAINPID
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=xanene_ops
+
+# Security hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/xanene_ops
+
+[Install]
+WantedBy=multi-user.target
