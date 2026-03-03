@@ -284,23 +284,23 @@ class XaneneOps {
             if (data.today_tasks.length > 0) {
                 tasksList.innerHTML = data.today_tasks.map(task => this.renderTaskItem(task)).join('');
             } else {
-                tasksList.innerHTML = '<div class="text-center text-gray-400 py-4">No tasks for today</div>';
+                tasksList.innerHTML = '<div class="text-center text-gray-400 py-4">Nenhuma tarefa para hoje</div>';
             }
-            
+
             // Upcoming events
             const eventsList = document.getElementById('dashboard-events-list');
             if (data.upcoming_events.length > 0) {
                 eventsList.innerHTML = data.upcoming_events.map(event => this.renderEventItem(event)).join('');
             } else {
-                eventsList.innerHTML = '<div class="text-center text-gray-400 py-4">No upcoming events</div>';
+                eventsList.innerHTML = '<div class="text-center text-gray-400 py-4">Nenhum evento futuro</div>';
             }
-            
+
             // Overdue tasks
             const overdueList = document.getElementById('dashboard-overdue-list');
             if (data.overdue_tasks.length > 0) {
                 overdueList.innerHTML = data.overdue_tasks.map(task => this.renderTaskItem(task, true)).join('');
             } else {
-                overdueList.innerHTML = '<div class="text-center text-gray-400 py-4">No overdue tasks</div>';
+                overdueList.innerHTML = '<div class="text-center text-gray-400 py-4">Nenhuma tarefa atrasada</div>';
             }
         } catch (error) {
             console.error('Error loading dashboard:', error);
@@ -559,7 +559,7 @@ class XaneneOps {
             if (columns[status].length > 0) {
                 container.innerHTML = columns[status].map(task => this.renderTaskCard(task)).join('');
             } else {
-                container.innerHTML = '<div class="text-center text-gray-500 py-8 text-sm">No tasks</div>';
+                container.innerHTML = '<div class="text-center text-gray-500 py-8 text-sm">Nenhuma tarefa</div>';
             }
         });
     }
@@ -583,10 +583,10 @@ class XaneneOps {
                 <div class="flex items-start justify-between mb-2">
                     <h4 class="font-medium text-gray-900 text-sm">${task.title}</h4>
                     <div class="flex items-center space-x-1">
-                        <button onclick="app.openTaskModal(${task.id})" class="text-gray-400 hover:text-gray-900 p-1" title="Edit">
+                        <button onclick="app.openTaskModal(${task.id})" class="text-gray-400 hover:text-gray-900 p-1" title="Editar">
                             <i class="fas fa-edit text-xs"></i>
                         </button>
-                        <button onclick="app.deleteTask(${task.id})" class="text-gray-400 hover:text-red-600 p-1" title="Delete">
+                        <button onclick="app.deleteTask(${task.id})" class="text-gray-400 hover:text-red-600 p-1" title="Excluir">
                             <i class="fas fa-trash text-xs"></i>
                         </button>
                     </div>
@@ -602,7 +602,7 @@ class XaneneOps {
     }
 
     async deleteTask(taskId) {
-        if (!confirm('Are you sure you want to delete this task?')) {
+        if (!confirm('Tem certeza que deseja excluir esta tarefa?')) {
             return;
         }
 
@@ -610,7 +610,7 @@ class XaneneOps {
             await this.api(`/tasks/${taskId}`, { method: 'DELETE' });
             this.loadTasks();
         } catch (error) {
-            alert('Error deleting task: ' + error.message);
+            alert('Erro ao excluir tarefa: ' + error.message);
         }
     }
 
@@ -656,13 +656,13 @@ class XaneneOps {
                             ${task.assignee ? `<span class="text-gray-700 text-sm">${task.assignee.full_name}</span>` : '<span class="text-gray-500 text-sm">-</span>'}
                         </td>
                         <td class="px-6 py-4 text-right">
-                            <button onclick="app.openTaskModal(${task.id})" class="text-primary-500 hover:text-primary-400 text-sm">Edit</button>
+                            <button onclick="app.openTaskModal(${task.id})" class="text-primary-500 hover:text-primary-400 text-sm">Editar</button>
                         </td>
                     </tr>
                 `;
             }).join('');
         } else {
-            tbody.innerHTML = '<tr><td colspan="7" class="text-center text-gray-400 py-8">No tasks found</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="7" class="text-center text-gray-400 py-8">Nenhuma tarefa encontrada</td></tr>';
         }
     }
 
@@ -701,21 +701,21 @@ class XaneneOps {
                             </td>
                             <td class="px-6 py-4">
                                 <span class="text-xs px-2 py-1 rounded ${user.is_active ? 'bg-primary-500/20 text-primary-400' : 'bg-red-500/20 text-red-400'}">
-                                    ${user.is_active ? 'Active' : 'Inactive'}
+                                    ${user.is_active ? 'Ativo' : 'Inativo'}
                                 </span>
                             </td>
                             <td class="px-6 py-4">
                                 <span class="text-gray-700 text-sm">${createdDate}</span>
                             </td>
                             <td class="px-6 py-4 text-right">
-                                <button onclick="app.editUser(${user.id})" class="text-primary-500 hover:text-primary-400 text-sm mr-3">Edit</button>
-                                ${user.id !== this.currentUser.id ? `<button onclick="app.deleteUser(${user.id})" class="text-red-500 hover:text-red-400 text-sm">Delete</button>` : ''}
+                                <button onclick="app.editUser(${user.id})" class="text-primary-500 hover:text-primary-400 text-sm mr-3">Editar</button>
+                                ${user.id !== this.currentUser.id ? `<button onclick="app.deleteUser(${user.id})" class="text-red-500 hover:text-red-400 text-sm">Excluir</button>` : ''}
                             </td>
                         </tr>
                     `;
                 }).join('');
             } else {
-                tbody.innerHTML = '<tr><td colspan="6" class="text-center text-gray-400 py-8">No users found</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center text-gray-400 py-8">Nenhum usuário encontrado</td></tr>';
             }
         } catch (error) {
             console.error('Error loading users:', error);
@@ -821,54 +821,54 @@ class XaneneOps {
         const content = `
             <form id="task-form" class="space-y-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Title *</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Título *</label>
                     <input type="text" name="title" required class="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-primary-500 text-gray-900">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Descrição</label>
                     <textarea name="description" rows="3" class="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-primary-500 text-gray-900"></textarea>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Priority *</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Prioridade *</label>
                         <select name="priority" required class="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-primary-500 text-gray-900">
-                            <option value="low">Low</option>
-                            <option value="medium" selected>Medium</option>
-                            <option value="high">High</option>
-                            <option value="critical">Critical</option>
+                            <option value="low">Baixa</option>
+                            <option value="medium" selected>Média</option>
+                            <option value="high">Alta</option>
+                            <option value="critical">Crítica</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Category *</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Categoria *</label>
                         <select name="category" required class="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-primary-500 text-gray-900">
-                            <option value="collection">Collection</option>
-                            <option value="production">Production</option>
-                            <option value="delivery">Delivery</option>
-                            <option value="training">Training</option>
-                            <option value="sales">Sales</option>
+                            <option value="collection">Coleta</option>
+                            <option value="production">Produção</option>
+                            <option value="delivery">Entrega</option>
+                            <option value="training">Treinamento</option>
+                            <option value="sales">Vendas</option>
                             <option value="admin">Admin</option>
                         </select>
                     </div>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Due Date</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Data de Vencimento</label>
                     <input type="datetime-local" name="due_date" class="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-primary-500 text-gray-900">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Assign To</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Atribuir Para</label>
                     <select name="assigned_to_id" class="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-primary-500 text-gray-900">
-                        <option value="">Unassigned</option>
+                        <option value="">Não atribuído</option>
                         ${this.users.map(u => `<option value="${u.id}">${u.full_name}</option>`).join('')}
                     </select>
                 </div>
                 <div class="flex justify-end space-x-3 pt-4">
-                    <button type="button" onclick="app.closeModal()" class="px-4 py-2 bg-gray-200 hover:bg-gray-600 text-gray-900 rounded-lg transition-colors">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-gray-900 rounded-lg transition-colors">Create Task</button>
+                    <button type="button" onclick="app.closeModal()" class="px-4 py-2 bg-gray-200 hover:bg-gray-600 text-gray-900 rounded-lg transition-colors">Cancelar</button>
+                    <button type="submit" class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-gray-900 rounded-lg transition-colors">Criar Tarefa</button>
                 </div>
             </form>
         `;
-        
-        this.openModal('Create New Task', content);
+
+        this.openModal('Nova Tarefa', content);
         
         document.getElementById('task-form')?.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -913,62 +913,62 @@ class XaneneOps {
             const content = `
                 <form id="edit-task-form" class="space-y-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Title *</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Título *</label>
                         <input type="text" name="title" value="${task.title}" required class="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-primary-500 text-gray-900">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Descrição</label>
                         <textarea name="description" rows="3" class="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-primary-500 text-gray-900">${task.description || ''}</textarea>
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Priority *</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Prioridade *</label>
                             <select name="priority" required class="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-primary-500 text-gray-900">
-                                <option value="low" ${task.priority === 'low' ? 'selected' : ''}>Low</option>
-                                <option value="medium" ${task.priority === 'medium' ? 'selected' : ''}>Medium</option>
-                                <option value="high" ${task.priority === 'high' ? 'selected' : ''}>High</option>
-                                <option value="critical" ${task.priority === 'critical' ? 'selected' : ''}>Critical</option>
+                                <option value="low" ${task.priority === 'low' ? 'selected' : ''}>Baixa</option>
+                                <option value="medium" ${task.priority === 'medium' ? 'selected' : ''}>Média</option>
+                                <option value="high" ${task.priority === 'high' ? 'selected' : ''}>Alta</option>
+                                <option value="critical" ${task.priority === 'critical' ? 'selected' : ''}>Crítica</option>
                             </select>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Status *</label>
                             <select name="status" required class="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-primary-500 text-gray-900">
-                                <option value="pending" ${task.status === 'pending' ? 'selected' : ''}>Pending</option>
-                                <option value="in_progress" ${task.status === 'in_progress' ? 'selected' : ''}>In Progress</option>
-                                <option value="completed" ${task.status === 'completed' ? 'selected' : ''}>Completed</option>
+                                <option value="pending" ${task.status === 'pending' ? 'selected' : ''}>Pendente</option>
+                                <option value="in_progress" ${task.status === 'in_progress' ? 'selected' : ''}>Em Progresso</option>
+                                <option value="completed" ${task.status === 'completed' ? 'selected' : ''}>Concluído</option>
                             </select>
                         </div>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Category *</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Categoria *</label>
                         <select name="category" required class="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-primary-500 text-gray-900">
-                            <option value="collection" ${task.category === 'collection' ? 'selected' : ''}>Collection</option>
-                            <option value="production" ${task.category === 'production' ? 'selected' : ''}>Production</option>
-                            <option value="delivery" ${task.category === 'delivery' ? 'selected' : ''}>Delivery</option>
-                            <option value="training" ${task.category === 'training' ? 'selected' : ''}>Training</option>
-                            <option value="sales" ${task.category === 'sales' ? 'selected' : ''}>Sales</option>
+                            <option value="collection" ${task.category === 'collection' ? 'selected' : ''}>Coleta</option>
+                            <option value="production" ${task.category === 'production' ? 'selected' : ''}>Produção</option>
+                            <option value="delivery" ${task.category === 'delivery' ? 'selected' : ''}>Entrega</option>
+                            <option value="training" ${task.category === 'training' ? 'selected' : ''}>Treinamento</option>
+                            <option value="sales" ${task.category === 'sales' ? 'selected' : ''}>Vendas</option>
                             <option value="admin" ${task.category === 'admin' ? 'selected' : ''}>Admin</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Due Date</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Data de Vencimento</label>
                         <input type="datetime-local" name="due_date" value="${task.due_date ? new Date(task.due_date).toISOString().slice(0, 16) : ''}" class="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-primary-500 text-gray-900">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Assign To</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Atribuir Para</label>
                         <select name="assigned_to_id" class="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-primary-500 text-gray-900">
-                            <option value="">Unassigned</option>
+                            <option value="">Não atribuído</option>
                             ${this.users.map(u => `<option value="${u.id}" ${task.assigned_to_id === u.id ? 'selected' : ''}>${u.full_name}</option>`).join('')}
                         </select>
                     </div>
                     <div class="flex justify-end space-x-3 pt-4">
-                        <button type="button" onclick="app.closeModal()" class="px-4 py-2 bg-gray-200 hover:bg-gray-600 text-gray-900 rounded-lg transition-colors">Cancel</button>
-                        <button type="submit" class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-gray-900 rounded-lg transition-colors">Save Changes</button>
+                        <button type="button" onclick="app.closeModal()" class="px-4 py-2 bg-gray-200 hover:bg-gray-600 text-gray-900 rounded-lg transition-colors">Cancelar</button>
+                        <button type="submit" class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-gray-900 rounded-lg transition-colors">Salvar Alterações</button>
                     </div>
                 </form>
             `;
-            
-            this.openModal(`Edit Task: ${task.title}`, content);
+
+            this.openModal(`Editar Tarefa: ${task.title}`, content);
             
             document.getElementById('edit-task-form')?.addEventListener('submit', async (e) => {
                 e.preventDefault();
