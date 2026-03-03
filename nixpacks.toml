@@ -7,8 +7,8 @@ cmds = ["pip install -r requirements.txt"]
 [phases.build]
 cmds = [
     "echo 'Building...'",
-    "mkdir -p /app/frontend",
-    "cp -r frontend/* /app/frontend/ 2>/dev/null || echo 'No frontend files to copy'"
+    "echo 'Copying frontend files...',",
+    "cp -r ${NIXPACKS_APP_DIR}/frontend /app/frontend 2>/dev/null || echo 'Frontend copy completed'"
 ]
 
 [start]
