@@ -522,18 +522,21 @@ class XaneneOps {
         try {
             const priority = document.getElementById('task-priority-filter').value;
             const status = document.getElementById('task-status-filter').value;
-            
+
             let url = '/tasks?include_completed=true';
             if (priority) url += `&priority=${priority}`;
             if (status) url += `&status=${status}`;
-            
+
             const tasks = await this.api(url);
-            
+
             if (this.currentView === 'kanban') {
                 this.renderKanban(tasks);
             } else {
                 this.renderTaskList(tasks);
             }
+            
+            // Also refresh dashboard to sync metrics
+            this.loadDashboard();
         } catch (error) {
             console.error('Error loading tasks:', error);
         }
