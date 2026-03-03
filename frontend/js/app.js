@@ -789,9 +789,13 @@ class XaneneOps {
                 description: formData.get('description'),
                 priority: formData.get('priority'),
                 category: formData.get('category'),
-                due_date: dueDateValue ? dueDateValue : null,
                 assigned_to_id: formData.get('assigned_to_id') ? parseInt(formData.get('assigned_to_id')) : null,
             };
+            
+            // Only add due_date if it has a value
+            if (dueDateValue) {
+                data.due_date = dueDateValue;
+            }
 
             try {
                 await this.api('/tasks', { method: 'POST', body: JSON.stringify(data) });
@@ -877,9 +881,13 @@ class XaneneOps {
                     priority: formData.get('priority'),
                     status: formData.get('status'),
                     category: formData.get('category'),
-                    due_date: dueDateValue ? dueDateValue : null,
                     assigned_to_id: formData.get('assigned_to_id') ? parseInt(formData.get('assigned_to_id')) : null,
                 };
+                
+                // Only add due_date if it has a value
+                if (dueDateValue) {
+                    data.due_date = dueDateValue;
+                }
 
                 try {
                     await this.api(`/tasks/${taskId}`, { method: 'PUT', body: JSON.stringify(data) });
