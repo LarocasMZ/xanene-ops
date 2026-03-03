@@ -5,8 +5,8 @@ from datetime import datetime, timedelta
 from typing import List
 from ..core.database import get_db
 from ..models.user import User
-from ..models.task import Task, TaskStatus, TaskCategory
-from ..models.event import Event, EventCategory
+from ..models.task import Task
+from ..models.event import Event
 from ..schemas.dashboard import (
     DashboardMetrics,
     TaskSummary,
@@ -43,13 +43,13 @@ async def get_dashboard(
 
     upcoming_collections = db.query(Event).filter(
         Event.is_active == True,
-        Event.category == EventCategory.COLLECTION,
+        Event.category == "collection",
         Event.start_datetime >= now,
     ).count()
 
     deliveries_scheduled = db.query(Event).filter(
         Event.is_active == True,
-        Event.category == EventCategory.DELIVERY,
+        Event.category == "delivery",
         Event.start_datetime >= now,
     ).count()
 
@@ -87,8 +87,8 @@ async def get_dashboard(
         today_tasks.append(TaskSummary(
             id=task.id,
             title=task.title,
-            priority=task.priority.value,
-            status=task.status.value,
+            priority=task.priority,
+            status=task.status,
             due_date=task.due_date,
             assignee_name=task.assignee.full_name if task.assignee else None,
         ))
@@ -104,7 +104,7 @@ async def get_dashboard(
         upcoming_events.append(EventSummary(
             id=event.id,
             title=event.title,
-            category=event.category.value,
+            category=event.category,
             start_datetime=event.start_datetime,
             end_datetime=event.end_datetime,
             location=event.location,
@@ -122,8 +122,8 @@ async def get_dashboard(
         overdue_list.append(TaskSummary(
             id=task.id,
             title=task.title,
-            priority=task.priority.value,
-            status=task.status.value,
+            priority=task.priority,
+            status=task.status,
             due_date=task.due_date,
             assignee_name=task.assignee.full_name if task.assignee else None,
         ))
