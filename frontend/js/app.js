@@ -550,7 +550,8 @@ class XaneneOps {
 
         ['pending', 'in_progress', 'completed'].forEach(status => {
             const container = document.getElementById(`kanban-${status}`);
-            document.getElementById(`${status}-count`).textContent = columns[status].length;
+            const countId = status === 'in_progress' ? 'inprogress-count' : `${status}-count`;
+            document.getElementById(countId).textContent = columns[status].length;
 
             if (columns[status].length > 0) {
                 container.innerHTML = columns[status].map(task => this.renderTaskCard(task)).join('');
