@@ -2,7 +2,7 @@
 
 class XaneneOps {
     constructor() {
-        this.apiBase = '';
+        this.apiBase = '/api';
         this.token = 'test-token';
         this.currentUser = {
             id: 1,
@@ -14,7 +14,7 @@ class XaneneOps {
         this.currentView = 'kanban';
         this.currentDate = new Date();
         this.users = [];
-        
+
         this.init();
     }
 
