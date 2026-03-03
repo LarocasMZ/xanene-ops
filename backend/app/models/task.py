@@ -86,15 +86,19 @@ class TaskCategory(str, enum.Enum):
     RELACIONAMENTO_IMPRENSA = "relacionamento_imprensa"
 
 
+# Get all category values for SQLAlchemy Enum
+TASK_CATEGORY_VALUES = [cat.value for cat in TaskCategory]
+
+
 class Task(Base):
     __tablename__ = "tasks"
 
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, nullable=False)
     description = Column(Text, nullable=True)
-    priority = Column(Enum(TaskPriority), default=TaskPriority.MEDIUM, nullable=False)
-    status = Column(Enum(TaskStatus), default=TaskStatus.PENDING, nullable=False)
-    category = Column(Enum(TaskCategory), nullable=False)
+    priority = Column(String(50), default="medium", nullable=False)
+    status = Column(String(50), default="pending", nullable=False)
+    category = Column(String(100), nullable=False)
     due_date = Column(DateTime, nullable=True)
     completed_at = Column(DateTime, nullable=True)
     is_active = Column(Boolean, default=True, nullable=False)
