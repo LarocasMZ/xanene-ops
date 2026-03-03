@@ -3,9 +3,7 @@ Database Migration Script
 Runs automatically on app startup to update database schema
 """
 
-from sqlalchemy import text, event
-from sqlalchemy.orm import Session
-from sqlalchemy.pool import Pool
+import os
 import logging
 
 logger = logging.getLogger(__name__)
@@ -23,21 +21,32 @@ NEW_CATEGORIES = [
     'gestao_redes_sociais', 'criacao_conteudo', 'eventos_institucionais', 'material_promocional', 'relacionamento_imprensa'
 ]
 
-def run_migrations(db: Session) -> bool:
+def run_migrations() -> bool:
     """
-    Run database migrations using raw connection.
+    Run database migrations using psycopg2 directly.
     """
     try:
+        import psycopg2
         print("🔄 Running database migrations...")
         
-        # Get raw connection
-        conn = db.connection()
-        raw_conn = conn.connection.connection
+        # Get database URL from environment
+        database_url = os.getenv("DATABASE_URL")
+        if not database_url:
+            print("❌ DATABASE_URL not found")
+            return False
+        
+        # Convert Railway DB URL format if needed
+        if database_url.startswith("postgresql://"):
+            database_url = database_url.replace("postgresql://", "postgres://", 1)
+        
+        # Connect to database
+        conn = psycopg2.connect(database_url)
+        conn.autocommit = True
+        cur = conn.cursor()
         
         # Drop old constraint
         try:
-            raw_conn.cursor().execute("ALTER TABLE tasks DROP CONSTRAINT IF EXISTS valid_category")
-            raw_conn.commit()
+            cur.execute("ALTER TABLE tasks DROP CONSTRAINT IF EXISTS valid_category")
             print("✅ Dropped old category constraint")
         except Exception as e:
             print(f"⚠️ Could not drop constraint: {e}")
@@ -46,16 +55,16 @@ def run_migrations(db: Session) -> bool:
         categories_str = ', '.join([f"'{c}'" for c in NEW_CATEGORIES])
         sql = f"ALTER TABLE tasks ADD CONSTRAINT valid_category CHECK (category IN ({categories_str}))"
         
-        raw_conn.cursor().execute(sql)
-        raw_conn.commit()
-        
+        cur.execute(sql)
         print(f"✅ Database migrations completed! Added {len(NEW_CATEGORIES)} categories")
+        
+        cur.close()
+        conn.close()
         return True
         
+    except ImportError:
+        print("❌ psycopg2 not installed, skipping migrations")
+        return False
     except Exception as e:
         print(f"❌ Migration failed: {e}")
-        try:
-            db.rollback()
-        except:
-            pass
         return False

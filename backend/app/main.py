@@ -106,12 +106,6 @@ def create_initial_admin():
 @app.on_event("startup")
 async def startup_event():
     # Run database migrations first
-    from sqlalchemy.orm import Session
-    db = Session(bind=engine)
-    try:
-        run_migrations(db)
-    finally:
-        db.close()
-    
+    run_migrations()
     create_initial_admin()
     print(f"🚀 {settings.APP_NAME} v{settings.APP_VERSION} started")
