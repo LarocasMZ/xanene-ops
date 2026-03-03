@@ -42,9 +42,13 @@ def run_migrations() -> bool:
         # Drop ALL enum constraints - we're using String types now
         try:
             print(f"🔨 Dropping all enum constraints...")
+            # Tasks constraints
             cur.execute("ALTER TABLE tasks DROP CONSTRAINT IF EXISTS valid_category")
             cur.execute("ALTER TABLE tasks DROP CONSTRAINT IF EXISTS valid_priority")
             cur.execute("ALTER TABLE tasks DROP CONSTRAINT IF EXISTS valid_status")
+            # Events constraints
+            cur.execute("ALTER TABLE events DROP CONSTRAINT IF EXISTS valid_category")
+            cur.execute("ALTER TABLE events DROP CONSTRAINT IF EXISTS valid_recurrence")
             print("✅ Dropped all constraints - columns are now free-form strings")
         except Exception as e:
             print(f"⚠️ Could not drop constraints: {e}")
@@ -52,9 +56,13 @@ def run_migrations() -> bool:
         # Change column types to VARCHAR (in case they were ENUM)
         try:
             print(f"🔨 Converting columns to VARCHAR...")
+            # Tasks
             cur.execute("ALTER TABLE tasks ALTER COLUMN category TYPE VARCHAR(100)")
             cur.execute("ALTER TABLE tasks ALTER COLUMN priority TYPE VARCHAR(50)")
             cur.execute("ALTER TABLE tasks ALTER COLUMN status TYPE VARCHAR(50)")
+            # Events
+            cur.execute("ALTER TABLE events ALTER COLUMN category TYPE VARCHAR(50)")
+            cur.execute("ALTER TABLE events ALTER COLUMN recurrence_type TYPE VARCHAR(50)")
             print("✅ Converted columns to VARCHAR")
         except Exception as e:
             print(f"⚠️ Could not convert columns: {e}")

@@ -1,7 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import Optional, List
 from datetime import datetime
-from ..models.event import EventCategory, RecurrenceType
 
 
 class EventBase(BaseModel):
@@ -10,9 +9,9 @@ class EventBase(BaseModel):
     location: Optional[str] = None
     start_datetime: datetime
     end_datetime: datetime
-    category: EventCategory
+    category: str
     is_recurring: bool = False
-    recurrence_type: Optional[RecurrenceType] = RecurrenceType.NONE
+    recurrence_type: Optional[str] = "none"
     assigned_staff_ids: Optional[List[int]] = []
 
 
@@ -26,9 +25,9 @@ class EventUpdate(BaseModel):
     location: Optional[str] = None
     start_datetime: Optional[datetime] = None
     end_datetime: Optional[datetime] = None
-    category: Optional[EventCategory] = None
+    category: Optional[str] = None
     is_recurring: Optional[bool] = None
-    recurrence_type: Optional[RecurrenceType] = None
+    recurrence_type: Optional[str] = None
     assigned_staff_ids: Optional[List[int]] = None
 
 

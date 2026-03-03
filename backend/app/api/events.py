@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from typing import List, Optional
 from ..core.database import get_db
 from ..models.user import User, UserRole
-from ..models.event import Event, EventCategory, event_staff
+from ..models.event import Event, event_staff
 from ..schemas.event import EventCreate, EventUpdate, EventResponse
 from .deps import get_current_user, require_admin_or_ops
 
@@ -51,7 +51,7 @@ async def create_event(
 
 @router.get("", response_model=List[EventResponse])
 async def list_events(
-    category: Optional[EventCategory] = Query(None),
+    category: Optional[str] = Query(None),
     start_date: Optional[datetime] = Query(None),
     end_date: Optional[datetime] = Query(None),
     include_past: bool = Query(False),
