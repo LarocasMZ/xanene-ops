@@ -12,11 +12,18 @@ class EventBase(BaseModel):
     category: str
     is_recurring: bool = False
     recurrence_type: Optional[str] = "none"
+
+
+class EventCreate(BaseModel):
+    title: str = Field(..., min_length=1, max_length=200)
+    description: Optional[str] = None
+    location: Optional[str] = None
+    start_datetime: datetime
+    end_datetime: datetime
+    category: str
+    is_recurring: bool = False
+    recurrence_type: Optional[str] = "none"
     assigned_staff_ids: Optional[List[int]] = []
-
-
-class EventCreate(EventBase):
-    pass
 
 
 class EventUpdate(BaseModel):
@@ -36,7 +43,7 @@ class EventResponse(EventBase):
     created_by_id: int
     created_at: datetime
     updated_at: datetime
-    staff: List[dict] = []
+    assigned_staff_ids: Optional[List[int]] = []
 
     class Config:
         from_attributes = True
