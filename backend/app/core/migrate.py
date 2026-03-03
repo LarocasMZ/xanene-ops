@@ -39,13 +39,25 @@ def run_migrations() -> bool:
         
         print(f"✅ Database connected!")
         
-        # Drop old constraint - we're now using String instead of Enum
+        # Drop ALL enum constraints - we're using String types now
         try:
-            print(f"🔨 Dropping category constraint (using String type now)...")
+            print(f"🔨 Dropping all enum constraints...")
             cur.execute("ALTER TABLE tasks DROP CONSTRAINT IF EXISTS valid_category")
-            print("✅ Dropped category constraint - categories are now free-form strings")
+            cur.execute("ALTER TABLE tasks DROP CONSTRAINT IF EXISTS valid_priority")
+            cur.execute("ALTER TABLE tasks DROP CONSTRAINT IF EXISTS valid_status")
+            print("✅ Dropped all constraints - columns are now free-form strings")
         except Exception as e:
-            print(f"⚠️ Could not drop constraint: {e}")
+            print(f"⚠️ Could not drop constraints: {e}")
+        
+        # Change column types to VARCHAR (in case they were ENUM)
+        try:
+            print(f"🔨 Converting columns to VARCHAR...")
+            cur.execute("ALTER TABLE tasks ALTER COLUMN category TYPE VARCHAR(100)")
+            cur.execute("ALTER TABLE tasks ALTER COLUMN priority TYPE VARCHAR(50)")
+            cur.execute("ALTER TABLE tasks ALTER COLUMN status TYPE VARCHAR(50)")
+            print("✅ Converted columns to VARCHAR")
+        except Exception as e:
+            print(f"⚠️ Could not convert columns: {e}")
         
         print(f"✅ Database migrations completed!")
         print("=" * 50)
@@ -56,9 +68,7 @@ def run_migrations() -> bool:
         
     except ImportError as e:
         print(f"❌ psycopg2 not installed: {e}")
-        print("⚠️ Skipping migrations, app may fail on category validation")
         return False
     except Exception as e:
         print(f"❌ Migration failed: {type(e).__name__}: {e}")
-        print("⚠️ Continuing without migrations")
         return False
