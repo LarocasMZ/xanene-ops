@@ -490,31 +490,31 @@ class XaneneOps {
 
     renderKanban(tasks) {
         const columns = { pending: [], in_progress: [], completed: [] };
-        
+
         tasks.forEach(task => {
             if (columns[task.status]) {
                 columns[task.status].push(task);
             }
         });
-        
+
         ['pending', 'in_progress', 'completed'].forEach(status => {
             const container = document.getElementById(`kanban-${status}`);
             document.getElementById(`${status}-count`).textContent = columns[status].length;
-            
+
             if (columns[status].length > 0) {
                 container.innerHTML = columns[status].map(task => this.renderTaskCard(task)).join('');
             } else {
                 container.innerHTML = '<div class="text-center text-gray-500 py-8 text-sm">No tasks</div>';
             }
-        });
-        
-        // Add drop zone handlers
-        ['pending', 'in_progress', 'completed'].forEach(status => {
-            const container = document.getElementById(`kanban-${status}`);
-            container.addEventListener('dragover', (e) => this.handleDragOver(e));
-            container.addEventListener('drop', (e) => this.handleDrop(e, status));
-            container.addEventListener('dragenter', (e) => this.handleDragEnter(e));
-            container.addEventListener('dragleave', (e) => this.handleDragLeave(e));
+            
+            // Clear existing handlers and add new ones
+            const newContainer = container.cloneNode(true);
+            container.parentNode.replaceChild(newContainer, container);
+            
+            newContainer.addEventListener('dragover', (e) => this.handleDragOver(e));
+            newContainer.addEventListener('drop', (e) => this.handleDrop(e, status));
+            newContainer.addEventListener('dragenter', (e) => this.handleDragEnter(e));
+            newContainer.addEventListener('dragleave', (e) => this.handleDragLeave(e));
         });
     }
 
@@ -545,17 +545,24 @@ class XaneneOps {
 
     async handleDrop(event, newStatus) {
         event.preventDefault();
-        event.currentTarget.classList.remove('bg-blue-50');
+        event.stopPropagation();
+        
+        const container = event.currentTarget;
+        container.classList.remove('bg-blue-50');
         
         const taskId = parseInt(event.dataTransfer.getData('text/plain'));
         
+        console.log('Dropping task', taskId, 'to status', newStatus);
+
         try {
             await this.api(`/tasks/${taskId}`, {
                 method: 'PUT',
                 body: JSON.stringify({ status: newStatus })
             });
+            console.log('Task updated successfully');
             this.loadTasks();
         } catch (error) {
+            console.error('Error updating task:', error);
             alert('Error updating task status: ' + error.message);
         }
     }
