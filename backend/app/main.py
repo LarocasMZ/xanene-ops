@@ -36,13 +36,34 @@ app.include_router(dashboard_router, prefix="/api")
 # Serve static files (if frontend exists)
 frontend_dir = Path(__file__).parent.parent.parent / "frontend"
 
-# Only mount static files if directories exist (handles Railway deployment)
-try:
-    if (frontend_dir / "css").exists() and (frontend_dir / "js").exists():
-        app.mount("/static", StaticFiles(directory=str(frontend_dir / "css"), html=True), name="static")
-        app.mount("/js", StaticFiles(directory=str(frontend_dir / "js"), html=True), name="js")
-except RuntimeError as e:
-    print(f"Note: Static files not mounted - {e}")
+# Mount static files for Railway (handles missing directories gracefully)
+def mount_static_files():
+    """Mount static files if frontend directory exists"""
+    try:
+        if not frontend_dir.exists():
+            print("Note: Frontend directory not found, skipping static files")
+            return
+        
+        # Mount CSS files
+        css_dir = frontend_dir / "css"
+        if css_dir.exists():
+            app.mount("/static", StaticFiles(directory=str(css_dir), html=True), name="static")
+        
+        # Mount JS files
+        js_dir = frontend_dir / "js"
+        if js_dir.exists():
+            app.mount("/js", StaticFiles(directory=str(js_dir), html=True), name="js")
+        
+        # Mount images
+        images_dir = frontend_dir / "images"
+        if images_dir.exists():
+            app.mount("/images", StaticFiles(directory=str(images_dir), html=True), name="images")
+            
+        print(f"Frontend static files mounted from {frontend_dir}")
+    except RuntimeError as e:
+        print(f"Note: Static files not mounted - {e}")
+
+mount_static_files()
 
 
 @app.get("/")

@@ -5,10 +5,11 @@ nixPkgs = ["python311"]
 cmds = ["pip install -r requirements.txt"]
 
 [phases.build]
-cmds = ["echo 'Building...'"]
+cmds = [
+    "echo 'Building...'",
+    "mkdir -p /app/frontend",
+    "cp -r frontend/* /app/frontend/ 2>/dev/null || echo 'No frontend files to copy'"
+]
 
 [start]
 cmd = "gunicorn backend.app.main:app -w 4 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000"
-
-[staticAssets]
-"frontend" = "/app/frontend"
